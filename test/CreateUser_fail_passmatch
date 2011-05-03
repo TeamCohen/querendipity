@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>CreateUser_fail_passmatch</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">CreateUser_fail_passmatch</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/strutsnies/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Toggle Admin</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add User</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>User_saveCreate_username</td>
+	<td>newuser</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>User_saveCreate_email</td>
+	<td>newuser@do.not.send</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>User_saveCreate_newpassword</td>
+	<td>password</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>User_saveCreate_newpassword2</td>
+	<td>passsword</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>User_saveCreate_0</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>xpath=//span[@class='errorMessage']</td>
+	<td>Passwords must match.</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

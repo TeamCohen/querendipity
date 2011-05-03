@@ -1,0 +1,51 @@
+y(_Bef)y(HRea)p(Auth)a(_Aut)p	Read about my favorite <b>authors</b> 2 years back
+a(_Aut)p(_Cit)p(Cite)p	Read papers <b>co-cited</b> with my papers
+y(_Bef)y(_Bef)y(HRea)p(_Cit)p	Read <b>follow ups</b> to my readings 3 years back
+y(HRea)p(Auth)a(_Aut)p	Read from my <b>favorite authors</b> last year
+y(HRea)p(Cite)p(_Cit)p	Read papers which <b>share references</b> with my reading last year 
+y(HRea)p(Titl)w(_Tit)p	Read papers with similar <b>titles</b> to what I have read last year
+a(Read)p(QmHe)h(_QmH)p	Read about my favorite major <b>Mesh qualifiers</b>
+a(Read)p(Auth)a(_Aut)p	Read about my favorite <b>authors</b>
+a(_Aut)p	Read my own papers
+y(HRea)p(_Cit)p(Cite)p	Read papers <b>co-cited</b> with my reading last year
+y(HRea)p(DmHe)h(_DmH)p	Read about my favorite major <b>Mesh descriptor</b>
+a(Read)p(Titl)w(_Tit)p	Read papers with similar <b>titles</b> to what I have read
+a(Read)p(_Cit)p(Gene)g(_Gen)p	Don't read about <b>genes</b> of <b>follow ups</b> to my reading 
+y(HRea)p(Aff)a(_Aff)p(_Cit)p	Don't read <b>follow ups</b>  to my favorite <b>lab</b>  last year
+a(_Aut)p(_Cit)p	Don't read follow ups to <b>my own papers</b>
+y(_Bef)y(HRea)p(DmHe)h(_DHe)p	Don't read about my favorite <b>Mesh descriptor</b>  2 years back
+a(Read)p(_Cit)p(_Cit)p	Don't read <b>follow ups</b>2 to what I generally read
+y(_Bef)y(HRea)p(_Cit)p	Don't read <b>follow ups</b> to what I read 2 years back
+y(HRea)p(Year)y(HRea)p(_Cit)p	
+y(HRea)p(Auth)a(_Aut)p(_Cit)p	Don't read <b>follow ups</b> to my favorite <b>authors</b> last year
+y(HRea)p(_Cit)p(Gene)g(_Gen)p	Don't read about <b>genes of <b>follow ups</b> to my reading last year
+a(_Aut)p(_Cit)p(_Cit)p(_Cit)p	Don't read <b>follow ups</b>3 of <b>my own papers</b>
+y(HRea)p(_Cit)p(_Cit)p	Don't read <b>follow ups</b>2 to what I read last year
+a(_Aut)p(Aff)a(_Aff)p	Don't read paper from <b>my own lab</b>
+y(HRea)p(_Cit)p	Don't read <b>follow ups</b>  to my reading last year
+y(_Bef)y(YRea)p(_Cit)p	Read <b>follow ups</b> to my readings 2 years back
+y(_Yea)p	Don't read last year's paper
+a(_Aut)p(_Cit)p(_Cit)p	Read <b>follow ups</b>2 to <b>my own paper</b>
+a(Read)p(_Cit)p	Don't read <b>follow ups</b> to what I generally read
+a(Read)p(Aff)a(_Aff)p	Read papers from <b>my own lab</b>
+a(Read)p(QHea)h(_QmH)p	Read about my favorite <b>Mesh qualifier</b>
+a(Read)p(DmHe)h(_DmH)p	Read about my favorite major <b>Mesh descriptors</b>
+a(Read)p(QmHe)h(_QHe)p	Read about my favorite <b>Mesh qualifier</b>
+a(Read)p(DHea)h(_DmH)p	Read about my favorite major <b>Mesh descriptors</b>
+a(_Aut)p(QmHe)h(_QmH)p	Read papers with the same major <b>Mesh qualifier</b> as my papers
+a(Read)p(DHea)h(_DHe)p	Read about my favorite major <b>Mesh descriptors</b>
+a(Read)p(_Cit)p(Cite)p	Read papers <b>co-cited</b> with what I generally read
+a(Read)p(Chem)c(_Che)p	Read about my favorite <b>Chemicals</b>
+y(_Yea)p(_Cit)p(_Cit)p	Don't read <b>follow ups</b>2 to last year's papers
+y(_Yea)p(_Cit)p	Don't read <b>follow ups</b> to last year's paper
+a(Read)p(Gene)g(_Gen)p	Don't read about <b>genes</b> which I have already read
+y(_Yea)p(Auth)a(_Aut)p	Don't read about last year's popular <b>authors</b>
+y(_Yea)p(Aff)a(_Aff)p	Don't read about last year's popular <b>labs</b>
+y(_Bef)y(_Yea)p(_Cit)p	Dont't read <b>follow ups</b> to papers 2 years back
+a(Read)p(Cite)p(_Cit)p	Read papers which <b>share references</b> with what I generally read
+a(_Aut)p(QmHe)h(_QHe)p	Read about the <b>Mesh qualifiers</b> that I am working on
+a(_Aut)p(Gene)g(_Gen)p	Read about the <b>genes</b> that I am working on
+a(_Aut)p(Chem)c(_Che)p	Read about the <b>chemicals</b> that I am working on
+a(_Aut)p(QHea)h(_QHe)p	Read about the <b>Mesh qualifiers</b> that I am working on
+a(_Aut)p(DHea)h(_DmH)p	Read about the <b>Mesh qualifiers</b> that I am working on
+a(Read)p(QHea)h(_QHe)p	Read about my favorite <b>Mesh qualifiers</b>

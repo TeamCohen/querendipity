@@ -1,0 +1,3 @@
+GraphLoader loader = new GraphLoader(new BasicGraph());
+loader.load(new File("test.ghirl"));
+return loader.getGraph();

@@ -1,0 +1,8 @@
+*.properties
+.project
+.classpath
+.settings
+.checkstyle
+dist
+inga-tomcat
+bin

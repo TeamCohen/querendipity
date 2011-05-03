@@ -1,0 +1,72 @@
+<body>
+NIES is a web frontend for information retrieval from a GHIRL-based data
+repository. NIES currently supports a Saccharomyces-centric publication
+dataset, but there are immediate plans to extend it to support
+additional datasets focused on the Drosophila and Machine Learning domains.
+
+<p>NIES is a Struts app. You can find more information about Struts
+online, but the basic data flow for a Struts app goes somewhat like
+this:</p>
+<ol>
+	<li>User requests a URL</li>
+	<li>struts.xml maps the URL to an Action, which is associated with
+	a class and a method for handling the request, a set of validation
+	criteria, a stack of Interceptors, and one or more JSPs for displaying
+	results according to the return signal from the action.</li>
+	<li>Request variables (the ?arg=value&arg=value portion of the URL
+	for a GET, or the encoded values for a POST) are validated; validations
+	failures bounce you back to the calling page</li>
+	<li>Interceptors are executed, one of which fills Bean-style
+	variables in an instance of the Action's class with values from the
+	request</li>
+	<li>Action is executed using the method specified in struts.xml,
+	filling other bean variables and returning a control signal (success,
+	input, error, etc)</li>
+	<li>Results are displayed in a JSP as specified in struts.xml.
+	This page has access to the bean variables in the Action.</li>
+</ol>
+
+<p>This should hopefully make the package layout a little more clear.</p>
+
+<p>The package breakdown is as follows:</p>
+<ul>
+	<li>These all have direct mappings to the Struts framework:
+	<ul>
+		<li>{@link nies.actions} -- Struts action classes as named in 
+		src/struts.xml</li>
+		<li>{@link nies.interceptors} -- Struts interceptors for checking
+		authentication status</li>
+		<li>{@link nies.validation} -- Struts forms validation (these are
+		declared in src/validators.xml and keyed to some of the actions using
+		.xml files in {@link nies.actions})</li>
+	</ul>
+	</li>
+
+	<li>These are auxilliary packages:
+	<ul>
+		<li>{@link nies.data} -- database model/view/controller as
+		specified by sleepycat JE -- the user DB and the relevance DB is in
+		here</li>
+		<li>{@link nies.metadata} -- Tomcat servlet for autocomplete and
+		GHIRL graph access; also provides access to metadata displayed in
+		search results page</li>
+		<li>{@link nies.ui} -- model for the display of search results. A
+		Tab knows how to change a GHIRL Distribution of search results into a
+		list of Result objects containing all the metadata needed for display
+		on the results page.</li>
+	</ul>
+	</li>
+
+	<li>The display code (JSPs) are all in web/; they make abundant
+	use of struts tags as well as some
+	use of a javascript engine called dijit. 
+	<ul>
+		<li><a
+		href="http://cwiki.apache.org/WW/tag-developers-guide.html">
+	Struts Tag Developer's Guide</a></li>
+		<li><a
+		href="http://docs.dojocampus.org/dijit/index">
+	http://docs.dojocampus.org/dijit/index</a></li>
+</ul>
+
+</body>

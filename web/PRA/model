@@ -1,0 +1,134 @@
+weight	feature	comments
+0.00000	y(Befo)y(Befo)y(_Yea)p	
+0.00000	y(Befo)y(Befo)y(YRea)p	
+0.00000	y(Befo)y(_Yea)p	
+0.00000	y(Befo)y(_Yea)p(Cite)p	
+0.00000	y(Befo)y(_Yea)p(_Cit)p	
+0.00000	y(Befo)y(YRea)p	
+0.00000	y(Befo)y(YRea)p(Cite)p	
+0.00000	y(Befo)y(YRea)p(_Cit)p	
+0.00000	y(_Bef)y(_Bef)y(_Yea)p	
+0.00000	y(_Bef)y(_Bef)y(YRea)p	
+0.00000	y(_Bef)y(_Yea)p	
+0.00000	y(_Bef)y(_Yea)p(Cite)p	
+-111.53209	y(_Bef)y(_Yea)p(_Cit)p	Read <b>follow up</b>  papers of years 2 years back
+0.00000	y(_Bef)y(YRea)p	
+0.00000	y(_Bef)y(YRea)p(Cite)p	
+12.81395	y(_Bef)y(YRea)p(_Cit)p	Read <b>follow up</b>  papers of what I read 2 years back
+-225.55473	y(_Yea)p	Don't read last year's paper
+-1.51551	y(_Yea)p(Cite)p	
+0.00000	y(_Yea)p(Cite)p(Cite)p	
+-9.05054	y(_Yea)p(Cite)p(_Cit)p	
+-60.09254	y(_Yea)p(_Cit)p	Don't read <b>follow up</b>  papers of last year's paper
+-6.77326	y(_Yea)p(_Cit)p(Cite)p	
+-10.53934	y(_Yea)p(_Cit)p(_Cit)p	Don't read <b>follow up</b>2  papers of last year's paper
+-19.55050	y(_Yea)p(Gene)g(_Gen)p	
+-103.82219	y(_Yea)p(Auth)a(_Aut)p	Don't read about last year's popular <b>authors</b>
+0.00000	y(_Yea)p(Auth)a(Read)p	
+-6.26431	y(_Yea)p(Titl)w(_Tit)p	
+-106.97074	y(_Yea)p(Aff)i(_Aff)p	Don't read about last year's popular <b>labs</b>
+-16.36141	y(_Yea)p(Chem)c(_Che)p	
+-1.09885	y(_Yea)p(DHea)h(_DHe)p	
+0.00000	y(_Yea)p(DHea)h(_QHe)p	
+-4.84188	y(_Yea)p(DHea)h(_DmH)p	
+0.00000	y(_Yea)p(DHea)h(_QmH)p	
+0.00000	y(_Yea)p(QHea)h(_DHe)p	
+-23.60190	y(_Yea)p(QHea)h(_QHe)p	
+0.00000	y(_Yea)p(QHea)h(_DmH)p	
+-15.05120	y(_Yea)p(QHea)h(_QmH)p	
+-30.62017	y(_Yea)p(DmHe)h(_DHe)p	
+0.00000	y(_Yea)p(DmHe)h(_QHe)p	
+-36.01170	y(_Yea)p(DmHe)h(_DmH)p	
+0.00000	y(_Yea)p(DmHe)h(_QmH)p	
+0.00000	y(_Yea)p(QmHe)h(_DHe)p	
+-34.08546	y(_Yea)p(QmHe)h(_QHe)p	
+0.00000	y(_Yea)p(QmHe)h(_DmH)p	
+-46.84652	y(_Yea)p(QmHe)h(_QmH)p	
+0.00000	y(YRea)p	
+0.00000	y(YRea)p(Cite)p	
+0.00000	y(YRea)p(Cite)p(Cite)p	
+0.00000	y(YRea)p(Cite)p(_Cit)p	
+0.00000	y(YRea)p(_Cit)p	
+0.00000	y(YRea)p(_Cit)p(Cite)p	
+0.00000	y(YRea)p(_Cit)p(_Cit)p	
+0.00000	y(YRea)p(Gene)g(_Gen)p	
+0.00000	y(YRea)p(Auth)a(_Aut)p	
+0.00000	y(YRea)p(Auth)a(Read)p	
+0.00000	y(YRea)p(Titl)w(_Tit)p	
+0.00000	y(YRea)p(Year)y(YRea)p	
+0.00000	y(YRea)p(Aff)i(_Aff)p	
+0.00000	y(YRea)p(Chem)c(_Che)p	
+0.00000	y(YRea)p(DHea)h(_DHe)p	
+0.00000	y(YRea)p(DHea)h(_QHe)p	
+0.00000	y(YRea)p(DHea)h(_DmH)p	
+0.00000	y(YRea)p(DHea)h(_QmH)p	
+0.00000	y(YRea)p(QHea)h(_DHe)p	
+0.00000	y(YRea)p(QHea)h(_QHe)p	
+0.00000	y(YRea)p(QHea)h(_DmH)p	
+0.00000	y(YRea)p(QHea)h(_QmH)p	
+0.00000	y(YRea)p(DmHe)h(_DHe)p	
+0.00000	y(YRea)p(DmHe)h(_QHe)p	
+0.00000	y(YRea)p(DmHe)h(_DmH)p	
+0.00000	y(YRea)p(DmHe)h(_QmH)p	
+0.00000	y(YRea)p(QmHe)h(_DHe)p	
+0.00000	y(YRea)p(QmHe)h(_QHe)p	
+0.00000	y(YRea)p(QmHe)h(_DmH)p	
+0.00000	y(YRea)p(QmHe)h(_QmH)p	
+3.12977	a(_Aut)p	Read my own papers
+1.65608	a(_Aut)p(Cite)p	
+0.00000	a(_Aut)p(Cite)p(Cite)p	
+-3.23577	a(_Aut)p(Cite)p(_Cit)p	
+-13.84336	a(_Aut)p(_Cit)p	Don't read follow up of <b>my own papers</b>
+58.02154	a(_Aut)p(_Cit)p(Cite)p	Read papers <b>co-cited</b> with my papers
+45.28007	a(_Aut)p(_Cit)p(_Cit)p	Read <b>follow up</b>2 of <b>my own paper</b>
+48.44689	a(_Aut)p(Gene)g(_Gen)p	Read about <b>genes</b> which I am working on
+-2.17287	a(_Aut)p(Titl)w(_Tit)p	
+0.00000	a(_Aut)p(Year)y(YRea)p	
+-112.63880	a(_Aut)p(Aff)i(_Aff)p	Don't read paper from <b>my own lab</b>
+21.98562	a(_Aut)p(Chem)c(_Che)p	Read about <b>chemicals</b> which I am working on
+-0.99847	a(_Aut)p(DHea)h(_DHe)p	
+0.00000	a(_Aut)p(DHea)h(_QHe)p	
+17.20806	a(_Aut)p(DHea)h(_DmH)p	
+0.00000	a(_Aut)p(DHea)h(_QmH)p	
+0.00000	a(_Aut)p(QHea)h(_DHe)p	
+19.23053	a(_Aut)p(QHea)h(_QHe)p	
+0.00000	a(_Aut)p(QHea)h(_DmH)p	
+-12.34814	a(_Aut)p(QHea)h(_QmH)p	
+-18.89679	a(_Aut)p(DmHe)h(_DHe)p	
+0.00000	a(_Aut)p(DmHe)h(_QHe)p	
+-16.44449	a(_Aut)p(DmHe)h(_DmH)p	
+0.00000	a(_Aut)p(DmHe)h(_QmH)p	
+0.00000	a(_Aut)p(QmHe)h(_DHe)p	
+83.51568	a(_Aut)p(QmHe)h(_QHe)p	Read papers with the same <b>Mesh quantifiers</b> as my papers
+0.00000	a(_Aut)p(QmHe)h(_DmH)p	
+30.22025	a(_Aut)p(QmHe)h(_QmH)p	Read papers with the same major <b>Mesh quantifier</b> as my papers
+0.00000	a(Read)p	
+0.00000	a(Read)p(Cite)p	
+0.00000	a(Read)p(Cite)p(Cite)p	
+168.32577	a(Read)p(Cite)p(_Cit)p	
+-21.35622	a(Read)p(_Cit)p	Read <b>follow up</b>  papers of what I generally read
+28.64833	a(Read)p(_Cit)p(Cite)p	Read papers <b>co-cited</b> with what I generally read
+-2.46407	a(Read)p(_Cit)p(_Cit)p	Don't read <b>follow up</b> 2 papers of what I read
+-77.01086	a(Read)p(Gene)g(_Gen)p	Don't read about <b>genes</b> which I have already read
+146.94785	a(Read)p(Auth)a(_Aut)p	Read about my favorite <b>authors</b>
+0.00000	a(Read)p(Auth)a(Read)p	
+107.77720	a(Read)p(Titl)w(_Tit)p	Read papers with similar <b>titles</b> to what I have read
+0.00000	a(Read)p(Year)y(YRea)p	
+1.21302	a(Read)p(Aff)i(_Aff)p	Read papers from <b>my own lab</b>
+22.73035	a(Read)p(Chem)c(_Che)p	Read about my favorite <b>Chemicals</b>
+28.71173	a(Read)p(DHea)h(_DHe)p	Read about my favorite major <b>Mesh descriptors</b>
+0.00000	a(Read)p(DHea)h(_QHe)p	
+40.41048	a(Read)p(DHea)h(_DmH)p	Read about my favorite major <b>Mesh descriptors</b>
+0.00000	a(Read)p(DHea)h(_QmH)p	
+0.00000	a(Read)p(QHea)h(_DHe)p	
+13.75943	a(Read)p(QHea)h(_QHe)p	
+0.00000	a(Read)p(QHea)h(_DmH)p	
+75.88794	a(Read)p(QHea)h(_QmH)p	Read about my favorite <b>Mesh quantifier</b>
+2.53113	a(Read)p(DmHe)h(_DHe)p	
+0.00000	a(Read)p(DmHe)h(_QHe)p	
+63.65939	a(Read)p(DmHe)h(_DmH)p	Read about my favorite major <b>Mesh descriptors</b>
+0.00000	a(Read)p(DmHe)h(_QmH)p	
+0.00000	a(Read)p(QmHe)h(_DHe)p	
+41.11172	a(Read)p(QmHe)h(_QHe)p	Read about my favorite <b>Mesh quantifier</b>
+0.00000	a(Read)p(QmHe)h(_DmH)p	
+159.24480	a(Read)p(QmHe)h(_QmH)p	Read about my favorite major <b>Mesh quantifiers</b>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="Struts NIES" default="all" basedir=".">
+
+<property file="build.properties"/>
+<property name="web.src" value="web/"/>
+<property name="web.dist" value="dist/"/>
+<property name="javadocDir" value="doc"/>
+
+<path id="tomcat.classpath">
+  <fileset dir="${tomcat.home}">
+    <include name="lib/**/*.jar"/>
+    <include name="server/**/*.jar"/>
+    <include name="common/**/*.jar"/>
+  </fileset>
+</path>
+
+
+<target name="test-tomcat-classpath">
+<echo message="${toString:tomcat.classpath}"/>
+</target>
+<description>
+		Testing Struts July 2009
+</description>
+
+	<!-- Configure the custom Ant tasks for the Manager application -->
+  <taskdef name="deploy"    classname="org.apache.catalina.ant.DeployTask"    classpathref="tomcat.classpath"/>
+  <taskdef name="list"      classname="org.apache.catalina.ant.ListTask"      classpathref="tomcat.classpath"/>
+  <taskdef name="reload"    classname="org.apache.catalina.ant.ReloadTask"    classpathref="tomcat.classpath"/>
+  <taskdef name="resources" classname="org.apache.catalina.ant.ResourcesTask" classpathref="tomcat.classpath"/>
+  <taskdef name="roles"     classname="org.apache.catalina.ant.RolesTask"     classpathref="tomcat.classpath"/>
+  <taskdef name="start"     classname="org.apache.catalina.ant.StartTask"     classpathref="tomcat.classpath"/>
+  <taskdef name="stop"      classname="org.apache.catalina.ant.StopTask"      classpathref="tomcat.classpath"/>
+  <taskdef name="undeploy"  classname="org.apache.catalina.ant.UndeployTask"  classpathref="tomcat.classpath"/>
+
+	<target name="init" depends="" description="Initialize environment">
+
+		<!-- Configure paths -->
+		<property name="java.src" value="src"/>
+		<property name="java.lib" value="${web.src}WEB-INF/lib"/>
+		<property name="test.lib" value="lib"/>
+		<property name="java.classes" value="${web.src}WEB-INF/classes"/>
+		<property name="web.context" value="/${app.name}"/>
+
+		<!-- Configure compilation parameters -->
+		<property name="compile.debug"              value="true"/>
+		<property name="compile.deprecation"        value="true"/>
+		<property name="compile.jdk-version.source" value="1.6"/>
+		<property name="compile.jdk-version.target" value="1.6"/>
+		<property name="compile.optimize"           value="true"/>
+		<property name="compile.compiler"           value="javac1.6"/>
+
+		<property name="warfile.name" value="${app.name}.war"/>
+
+		<path id="compile.classpath">
+			<fileset dir="${java.lib}">
+				<include name="*.jar"/>
+			</fileset>
+		
+			<pathelement path="${java.src}"/>
+			<pathelement path="${java.classes}"/>
+			
+			<fileset dir="${test.lib}">
+			<include name="**/*.jar"/>
+			</fileset>
+			<path refid="tomcat.classpath"/>
+        </path>
+	</target>
+
+	<target name="make_directories" description="Creates all project directories" depends="init">
+		<mkdir dir="${java.classes}"/>
+		<mkdir dir="${java.lib}"/>
+		<mkdir dir="${java.src}"/>
+		<mkdir dir="${web.dist}"/>
+	</target>
+
+	<target name="prepare" depends="init, make_directories" description="Prepare build directory"/>
+
+	<target name="deploy" depends="war" description="Install web application">
+    <deploy url="${tomcat.url}"
+    				username="${tomcat.username}"
+    				password="${tomcat.password}"
+            path="${web.context}"
+            war="file:${web.dist}${warfile.name}"/>
+  </target>
+
+  <target name="reload" depends="init" description="Reload web application">
+		<reload url="${tomcat.url}"
+    				username="${tomcat.username}"
+    				password="${tomcat.password}"
+            path="${web.context}" />
+  </target>
+
+  <target name="undeploy" depends="init" description="Remove web application">
+		<undeploy url="${tomcat.url}"
+    					username="${tomcat.username}"
+    					password="${tomcat.password}"
+					path="${web.context}" 
+					failonerror="false" />
+  </target>
+
+  <target name="compile" depends="prepare" description="Compile Java sources">
+        <javac debug="${compile.debug}"
+					 deprecation="${compile.deprecation}"
+					 destdir="${java.classes}"
+					 optimize="${compile.optimize}"
+					 srcdir="${java.src}">
+			<classpath refid="compile.classpath"/>
+		</javac>
+       <copy todir="${java.classes}">
+            <fileset dir="${java.src}">
+                 <exclude name="**/*.java"/>
+            	 <exclude name="**/package.html"/>
+            </fileset>
+       </copy>
+  </target>
+
+	<target name="clean" depends="init" description="Wipeout all generated files">
+	    <delete>
+	    	<fileset dir="${java.classes}/">
+	    		<include name="*/"/>
+	    	</fileset>
+	    </delete>
+	</target>
+
+	<target name="all" depends="clean, compile, war, undeploy, deploy" description="Clean and compile all components"/>
+
+	<target name="war" depends="compile" description="Creates war distribution">
+		<copy todir="${java.classes}">
+			<fileset dir=".">
+				<include name="*.properties"/>
+			</fileset>
+		</copy>
+
+		<zip basedir="${web.src}" destfile="${web.dist}${warfile.name}" whenempty="fail">
+			<include name="**/*.*"/>
+			<include name="*"/>
+			<include name="**/*"/>
+			<exclude name="**/nies/test/*.*"/> <!-- leave test cases behind -->
+			<exclude name="**/nies/test"/>
+			<exclude name="*.*~"/>			<!-- JEdit backups -->
+			<exclude name=".nbattrs"/>	<!-- Netbeans filesystem attributes -->
+			<exclude name="*.old"/>			<!-- Other backups -->
+			<exclude name="*.war"/>			<!-- All war archives -->
+		</zip>
+	</target>
+	
+	<target name="developercycle" depends="undeploy, deploy"/>
+
+	<target name="javadoc" depends="init" description="build javadoc API documentation">
+		<delete dir="${javadocDir}"/>
+		<mkdir dir="${javadocDir}/nies/"/>
+		<javadoc sourcepath="${java.src}" destdir="${javadocDir}" classpathref="compile.classpath" overview="${java.src}/overview.html" packagenames="*"/>
+	</target>
+</project>

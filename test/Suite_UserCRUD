@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="CreateUser_upass">CreateUser_upass</a></td></tr>
+<tr><td><a href="CreateUser_uepass">CreateUser_uepass</a></td></tr>
+<tr><td><a href="CreateUser_fail_unique">CreateUser_fail_unique</a></td></tr>
+<tr><td><a href="DeleteUser">DeleteUser</a></td></tr>
+<tr><td><a href="CreateUser_fail_passlength">CreateUser_fail_passlength</a></td></tr>
+<tr><td><a href="CreateUser_fail_passmatch">CreateUser_fail_passmatch</a></td></tr>
+</tbody></table>
+</body>
+</html>

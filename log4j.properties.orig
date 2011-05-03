@@ -1,0 +1,52 @@
+!-----------------------------------------------------------------------------!
+! Developed by Carnegie-Mellon Machine Learning Department                !
+! Written by Andrew Arnold (aarnold#cs,cmu,edu)                                 !
+!-----------------------------------------------------------------------------!
+
+nies.logDir    = .
+nies.dailyFile = nies_daily.log
+nies.debugFile = nies_debug.log
+
+log4j.rootLogger=WARN, Console
+
+!-----------------------------------------------------------------------------!
+! Package-specific thresholds                                                 !
+!-----------------------------------------------------------------------------!
+
+log4j.logger.ghirl=DEBUG
+log4j.logger.com.rcwang.seal=DEBUG
+log4j.logger.nies=TRACE
+
+
+!-----------------------------------------------------------------------------!
+! Log to multiple files (rolls daily)                                         !
+!-----------------------------------------------------------------------------!
+
+log4j.appender.DailyFile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.DailyFile.threshold=INFO
+log4j.appender.DailyFile.File=${nies.logDir}/${nies.dailyFile}
+log4j.appender.DailyFile.DatePattern='.'yyyy-MM-dd
+
+log4j.appender.DailyFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.DailyFile.layout.ConversionPattern=%d{ABSOLUTE} %-5p [%c{1}] %m%n
+
+!-----------------------------------------------------------------------------!
+! Log to a single file (overwrites the old one)                               !
+!-----------------------------------------------------------------------------!
+
+log4j.appender.DebugFile=org.apache.log4j.FileAppender
+log4j.appender.DebugFile.threshold=DEBUG
+log4j.appender.DebugFile.File=${nies.logDir}/${nies.debugFile}
+log4j.appender.DebugFile.append=false
+
+log4j.appender.DebugFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.DebugFile.layout.ConversionPattern=[%d{ABSOLUTE}] %m%n
+
+!-----------------------------------------------------------------------------!
+! Output to the screen (console)                                              !
+!-----------------------------------------------------------------------------!
+
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.threshold=TRACE
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=%-5p %d{HH:mm:ss,SSS} %C %m%n

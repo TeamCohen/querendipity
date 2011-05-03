@@ -1,0 +1,61 @@
+# These locations are with respect to the server:
+nies.metadataDirectory=/usr0/share/nies/data/
+nies.userdb=/usr0/share/nies/nies_userdb
+nies.relevancedb=/usr0/share/nies/nies_reldb
+
+# Users' reading history files go here -- must be tomcat-writable
+nies.readinghistory=/usr0/share/nies/yeast/PRA/UserHistory
+
+# Uncomment to show all results in a special tab (default is off)
+#nies.allTab=true
+
+# Uncomment to add a default query or space-delimited list of stop edges.
+# These can also be configured at runtime from the admin settings page of the webapp.
+# nies.defaultQuery=woolford
+# nies.stopEdges=hasGoTerm
+
+# Uncomment to show additional fields in the search form (default is just keywords and depth)
+# Space-separated list of fields from {genes} (boring for now I know ^_^)
+#nies.extraSearchFields=genes
+
+### TAB CONFIGURATION:
+
+# First list the tab titles as you want them to appear in the interface.
+# These should be unique and subject to the following restrictions:
+#   - "Other" is a reserved title for the allTab so don't use it.
+#   - Do not include spaces.
+#   - '_' is ok; use other special characters at your own risk 
+nies.tabs=Papers,Papers_tx,Genes,Authors,Terms
+
+# Next list the tab type for each tab (same order as nies.tabs)
+# NB These are the keys into the .class map in Tab
+nies.tabtypes=paper,configurable,configurable,configurable,configurable
+
+# For each "configurable"-type tab, specify:
+# 	nies.[title].filter - the filter string that selects nodes displayable by this tab
+#	nies.[title].attributes - the list of attributes as displayed in the block for each search result
+#	nies.[title].[attribute] - for each attribute, the PathSearcher list of edges to traverse to select nodes for display
+# Attributes *may* include spaces in the .attributes list, but replace these with _ when you give their PathSearcher list.
+
+nies.Papers_tx.filter=isa=$paper
+nies.Papers_tx.attributes=Citation,Authors,Genes
+nies.Papers_tx.Citation=hasKeywords
+nies.Papers_tx.Authors=paperIsWrittenByAuthor hasKeywords
+nies.Papers_tx.Genes=geneIsMentionedInPaperInverse
+nies.Papers_tx.label=
+
+nies.Genes.filter=isa=$gene
+nies.Genes.attributes=Auxilliary Genes,Researchers
+nies.Genes.Auxilliary_Genes=keyGeneIsAssociatedWithAuxGene
+nies.Genes.Researchers=geneIsMentionedInPaper paperIsWrittenByAuthor hasKeywords
+nies.Genes.label=
+
+nies.Authors.filter=isa=$author
+nies.Authors.attributes=Publications,Genes
+nies.Authors.Publications=paperIsWrittenByAuthorInverse hasKeywords
+nies.Authors.Genes=paperIsWrittenByAuthorInverse geneIsMentionedInPaperInverse
+nies.Authors.label=
+
+nies.Terms.filter=isa=$TERM
+nies.Terms.attributes=
+nies.Terms.label=

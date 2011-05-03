@@ -1,0 +1,174 @@
+task=sCV
+	#		train	// train using trainFile
+	#	, test	//test using testFile
+	#	, STT	//train test by splitting trainFile
+	#	, TT	//train test using trainFile, testFile
+	#	, sCV	//cross validation using trainFile
+	#	, CV	//cross validation using trainFile
+	#	, sLOO	//self leave-on-out cross validation using trainFile
+	#	, LOO	//leave one out cross validation using trainFile
+	#	, predict	// without knowing the ground truth
+id=a
+nFold=5
+
+#####################	Tunner
+nWorkingThread=8
+modTunner=sweep
+	#sweep=0
+vParam=L1b,L2b
+vDParam=
+	#trainFile
+nAvarage=1
+maxNRun=500
+bSplitSummary=false
+startingID=0
+bPrintSD=false
+memoryCode=.3000
+
+
+################## Learner########################################
+dataForm=alchemy
+	#	alchemy	binary
+dataFolder=../data/
+taskFile=PRA/YA-Py.WJ
+	#YA-Py.WJ
+	#	Y-J	YGW-P	YGW-J GW-J YA-Phy
+
+icQueryTime=0
+	#column id
+icQueryName=0
+	#column id
+
+trainRate=0.8
+
+trainFile=scenarios.Woolford_JL
+testFile=scenarios.Woolford_JL.predict
+
+modelFile=weights
+#modelFile=..\run\YA-Phy\P3\_Q1e-03\log_Sqr_L2=1e-03\a\weights
+
+#fixQuery=15082791
+################## learning	########################################
+rankMode=P
+	# P:PathRank, 
+	# R:RelationRank
+bBias=false
+scBias=0.003
+sIgnoredPathes=y(_Yea)p
+
+################## entity bias
+bEntBias=false
+
+################## entity rank
+bEntityRank=false
+maxE0Step=4
+thSig=0.5
+e0Gap=3
+	# formerly known as e0TimeDownSample
+bMergeE0=true
+
+
+##################### Loss function ##########################################
+lossMode=log
+	#	none, log, exp, hinge
+
+L1=0.00001
+L2=0.00001
+
+bPairwise=false
+negaMode=Sqr
+		all		//use all negative samples
+		, topK	//take top K*rNega samples ranked by plain weighting
+		, exp		// take 2^x: 1,2,4,8,16,32,...th negative samples
+		,expX	// take a^x:
+
+		, Sqr		// take x^2: 0,1,4,9,16,25,...th negative samples
+		,Tri	// take x^3: 0,1,8,27,64,125,...th negative samples
+		,poly	// take x^a:
+		,expX	// take a^x
+rNega=10
+dPoly=8
+dExp=1.5
+
+################## random walk	####################################
+maxStep=3
+bTimeStamped=true
+
+etTime=year
+rTime=Year
+
+bDisturb=false
+
+##################scaling
+bRWRenormalize=false
+RWDampening=1.0
+	0.8
+lenShortName=4
+##################sparsity control
+sMode=Q
+		T//Trucation
+		,P,Q// particle filtering
+		,S// Sampling
+		,R//Relative truncation
+		,B//Beam truncation
+		,N//none
+		
+###trucation
+truncate=0.001
+
+###relative truncation
+alphaRT=0.5
+
+###beam truncation
+maxWidth=0
+
+###sampling
+nSampling=2000
+
+###particle filtering
+minParticle=0.01
+
+##################DataDriven
+bDataDrivenPath=false
+nDataDrivenSample=200
+
+rMinQSupport=0.3
+rDull=0.3
+
+
+##################### Optimization  #####################
+maxItTrain=500
+epsCvg=0.001
+	# 0.002
+updateMode=oLBFGS
+	#	SMD	SGD
+
+##################### LBFGS
+maxLinfStep=10000
+maxL1Step=20000
+	20	100
+stepAdapt=0.1
+nStable=2
+
+##################### SGD 
+pSGD0=0.001
+	# dft=5		0.5
+	#scale the step
+pSGDPT=2	
+spSGDGB=0.1
+
+#bWeightAvg=false
+
+#################### Visualization#####################
+namingFile=naming.5w.txt
+maxRow=500
+bPrintEachIter=false
+bErrHistogram=false
+
+dbgTree=0
+bDetailedScores=false
+bDumpData=false
+
+	#bDumpTestData=true
+	#bPrintResults=true
+

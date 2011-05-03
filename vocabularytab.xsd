@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+            jxb:version="2.0">
+
+<xsd:annotation>
+	<xsd:documentation xml:lang="en">
+	Recursive types tab schema for NIES
+	Copyright 2010 CMU
+	Contact krivard@andrew.cmu.edu for details.
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="configuration" type="Configuration"/>
+
+<xsd:complexType name="Configuration">
+	<xsd:sequence>
+		<xsd:element name="tabs"  type="TabListings"/>
+		<xsd:element name="type"  type="TypeDescription" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="TabListings">
+	<xsd:sequence>
+		<xsd:element name="tab" type="TabListing" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="TabListing">
+	<xsd:attribute name="name" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:element name="selectorPath" type="xsd:string"/>
+<xsd:element name="filterString" type="xsd:string"/>
+
+<xsd:complexType name="TypeDescription">
+	<xsd:sequence>
+		<xsd:element name="title"    type="xsd:string"  minOccurs="0"/>
+		<xsd:element ref="selectorPath"                 minOccurs="0"/>
+		<xsd:element ref="filterString"                 minOccurs="0"/>
+		<xsd:element name="label"    type="LabelDescription"   minOccurs="0"/>
+		<xsd:element name="max"      type="xsd:int"     minOccurs="0"/>
+		<xsd:element name="more"     type="xsd:boolean" minOccurs="0" default="true"/>
+		<xsd:element name="attributes"         type="AttributesList"       minOccurs="0"/>
+		<xsd:element name="assertAttributes"   type="AssertAttributesList" minOccurs="0"/>
+		<xsd:element name="resourceDelimiter"  type="Delimiter"            minOccurs="0" default="block"/>
+		<xsd:element name="attributeDelimiter" type="Delimiter"            minOccurs="0" default="block"/>
+		<xsd:element name="typeclass"     type="xsd:string" minOccurs="0" default="type"/>
+		<xsd:element name="titleclass"    type="xsd:string" minOccurs="0" default="title"/>
+		<xsd:element name="resourceclass" type="xsd:string" minOccurs="0" default="resource"/>
+		<xsd:element name="labelclass"    type="xsd:string" minOccurs="0" default="label"/>
+	</xsd:sequence>
+	<xsd:attribute name="name" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:simpleType name="Delimiter">
+	<xsd:restriction base="xsd:string">
+		<xsd:enumeration value="inline"/>
+		<xsd:enumeration value="block"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:complexType name="AttributesList">
+	<xsd:sequence>
+		<xsd:element name="attribute" type="Attribute" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="AssertAttributesList">
+	<xsd:sequence>
+		<xsd:element name="attributeAssertion" type="AttributeAssertion" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="LabelDescription">
+	<xsd:sequence>
+		<xsd:element ref="selectorPath"/>
+		<xsd:element name="style"        type="xsd:string" minOccurs="0"/>
+		<xsd:element name="default"      type="xsd:string" minOccurs="0" default="(none)"/>
+		<xsd:element name="defaultStyle" type="xsd:string" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:complexType name="Attribute">
+	<xsd:attribute name="name" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeAssertion">
+	<xsd:sequence>
+		<xsd:element ref="selectorPath" minOccurs="0"/>
+		<xsd:element ref="filterString" minOccurs="0"/>
+		<xsd:element name="assertion" type="Assertion"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:simpleType name="Assertion">
+	<xsd:restriction base="xsd:string">
+		<xsd:enumeration value="full"/>
+		<xsd:enumeration value="empty"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+</xsd:schema>

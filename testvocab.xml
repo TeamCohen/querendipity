@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<tabs>
+		<tab name="organisms"/>
+	</tabs>
+	<type name="organisms">
+		<title>Organisms</title>
+		<filterString>isa=$organism</filterString>
+		<label>
+			<selectorPath>hasabbreviation</selectorPath>
+			<default>(unnamed organism)</default>
+		</label>
+		<attributes>
+			<attribute name="genus"/>
+			<attribute name="species"/>
+			<attribute name="commonname"/>
+		</attributes>
+	</type>
+	<type name="genus">
+		<title>Genus</title>
+		<label>
+			<selectorPath>hasgenus</selectorPath>
+			<default>(genus not listed)</default>
+		</label>
+		<max>1</max>
+		<more>false</more>
+	</type>
+	<type name="species">
+		<title>Species</title>
+		<label>
+			<selectorPath>hasspecies</selectorPath>
+			<default>(species not listed)</default>
+		</label>
+		<max>1</max>
+		<more>false</more>
+	</type>
+	<type name="commonname">
+		<title>Common Name</title>
+		<label>
+			<selectorPath>hascommon_name</selectorPath>
+			<default>(none listed)</default>
+		</label>
+	</type>
+</configuration>

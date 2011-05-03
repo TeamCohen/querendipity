@@ -1,0 +1,5 @@
+#persistent data for TextGraph's will be stored here
+ghirl.dbDir=/home/krivard/projects/yeast/ghirl_db
+ghirl.graphName=icwsm_gene_paper_author_firstAuthorCitations.1950_2007
+#ghirl.dbStore valid values are disk, memory. 'bsh' coming soon.
+ghirl.dbStore=disk

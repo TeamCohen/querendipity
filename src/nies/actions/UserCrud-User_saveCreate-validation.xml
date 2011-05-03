@@ -1,0 +1,27 @@
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN" "http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+	<field name="username">
+		<field-validator type="requiredstring">
+			<message key="error.username.required"/>
+		</field-validator>
+		<field-validator type="uniqueusername">
+			<message key="error.username.unique"/>
+		</field-validator>
+	</field>
+	<field name="newpassword">
+		<field-validator type="requiredstring">
+			<message key="error.password.required"/>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="minLength">6</param>
+			<message key="error.password.length"/>
+		</field-validator>
+	</field><!--
+
+    <validator type="expression">
+        <param name="expression">newpassword eq newpassword2</param>
+        <message key="error.password.match"/>
+    </validator>
+    
+--></validators>

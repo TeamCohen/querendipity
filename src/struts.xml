@@ -1,0 +1,184 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="nies" extends="struts-default">
+        <interceptors>
+        	<interceptor name="authenticationInterceptor"
+        			     class="nies.interceptors.AuthenticationInterceptor"/>
+        	<interceptor name="softAuthenticationInterceptor"
+        				 class="nies.interceptors.SoftAuthenticationInterceptor"/>
+        	<interceptor-stack name="secureStack">
+        		<interceptor-ref name="logger"/>
+        		<interceptor-ref name="authenticationInterceptor"/>
+        		<interceptor-ref name="defaultStack"/>
+        	</interceptor-stack>
+        	<interceptor-stack name="userawareStack">
+        		<interceptor-ref name="logger"/>
+        		<interceptor-ref name="softAuthenticationInterceptor"/>
+        		<interceptor-ref name="defaultStack"/>
+        	</interceptor-stack> 
+        </interceptors>
+        
+        <global-results>
+            <result name="error">/Error.jsp</result>
+            <result name="login">/Login.jsp</result>
+        </global-results>
+        
+        <global-exception-mappings>
+        	<exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+     </package>
+     
+     <package name="nies-secure" extends="nies">
+     	<default-interceptor-ref name="secureStack"/>
+     	
+     	<action name="ReadingHistory_*" class="nies.actions.ReadingHistory" method="{1}">
+     		<result>/ReadingHistory.jsp</result>
+     	</action>
+     	
+     	<action name="PositiveResults" class="nies.actions.PositiveDocuments">
+     		<result>/PositiveResults.jsp</result>
+     	</action>
+        
+        <action name="SearchForm" class="nies.actions.search.SearchForm">
+        	<result>/SearchFormOnly.jsp</result>
+        </action>
+        <action name="SearchPage" class="nies.actions.search.SearchForm">
+        	<result>/Search.jsp</result>
+        </action>
+        
+        <action name="Display" class="nies.actions.search.Display">
+        	<result name="success">/Results.jsp</result>
+        </action>
+        
+        <action name="NodeAnalysis" class="nies.actions.NodeAnalysis">
+        	<result name="success">/NodeAnalysis.jsp</result>
+            <result name="input" type="redirectAction">
+            	<param name="actionName">SearchPage</param>
+            	<param name="searchAction">Search</param>
+            </result>
+        </action>
+        
+        <action name="Search" class="nies.actions.search.Search">
+        	<result name="success">/Results.jsp</result>
+            <result name="input" type="redirectAction">
+            	<param name="actionName">SearchPage</param>
+            	<param name="searchAction">Search</param>
+            </result>
+        </action>
+        
+        <action name="MergedSearch" class="nies.actions.search.MergedSearch">
+        	<result name="success">/Results.jsp</result>
+            <result name="input">/Search.jsp</result>
+        </action>
+        <action name="Search-lazy" class="nies.actions.search.LazySearch">
+        	<result name="success">/Results-lazy.jsp</result>
+        	<result name="input" type="redirectAction">
+            	<param name="actionName">SearchPage</param>
+            	<param name="namespace">/</param>
+            	<param name="searchAction">Search-lazy</param>
+            </result>
+        </action>
+        <action name="Search-laziest" class="nies.actions.search.LaziestSearch">
+        	<result name="success">/Results-lazy.jsp</result>
+        	<result name="input" type="redirectAction">
+            	<param name="actionName">SearchPage</param>
+            	<param name="namespace">/</param>
+            	<param name="searchAction">Search-laziest</param>
+            </result>
+        </action>
+        
+        <action name="SearchTab" class="nies.actions.search.SearchTab">
+        	<result name="success">/SearchTab.jsp</result>
+       	</action>
+        
+        <action name="AdvSearch" class="nies.actions.search.Search">
+        	<result name="success">/Results.jsp</result>
+            <result name="input" type="redirectAction">AdvancedSearchForm</result>
+        </action>
+    	
+    	<action name="AdminSettings" class="nies.actions.AdminSettings">
+    		<result>/AdminSettings.jsp</result>
+    	</action>
+    	<action name="SaveAdminSettings" class="nies.actions.AdminSettings" method="save">
+    		<result>/AdminSettings.jsp</result>
+    	</action>
+    	
+     	<action name="PropertyManager" class="nies.actions.PropertyManager">
+     		<result>/PropertyManager.jsp</result>
+     	</action>
+     	<action name="SaveProperties" class="nies.actions.PropertyManager" method="save">
+     		<result>/PropertyManager.jsp</result>
+     	</action>
+        <action name="User_*" class="nies.actions.UserCrud" method="{1}">
+        	<result name="input">/EditUser.jsp</result>
+        	<result name="list" type="redirectAction">UserList</result>
+        	<result>/ViewUser.jsp</result>
+        </action>
+    </package>
+    <package name="nies-unsecure" extends="nies">
+    	<default-interceptor-ref name="userawareStack"/>
+        
+        
+        <action name="ModelBasedSearchPage" class="nies.actions.search.ModelBasedSearchForm">
+        	<result>/ModelBasedSearch.jsp</result>
+        </action>
+        <action name="ModelBasedSearch" class="nies.actions.search.ModelBasedSearch">
+        	<result name="success">/ModelBasedResults.jsp</result>
+        	<result name="input" type="redirectAction">ModelBasedSearchPage</result>
+        </action>
+        
+        
+        
+        <action name="Go" class="nies.actions.Go">
+        	<result>/Go.jsp</result>
+        </action>
+        
+        <action name="RelevanceFeedback" class="nies.actions.RelevanceFeedback">
+        	<result>/Go.jsp</result>
+        </action>
+        
+        <action name="Header" class="nies.actions.Header">
+        	<result>/Header.jsp</result>
+        	<result name="input">/Header.jsp</result>
+        	<result name="error">/ErrorError.jsp</result>
+        </action>
+        
+        <action name="Login" class="nies.actions.Login" method="login">
+        	<result name="input">/Login.jsp</result>
+        	<result type="redirectAction">
+        		<param name="actionName">${#session['lastAction']}</param>
+        		<param name="namespace">/</param>
+        	</result>
+        </action>
+        
+        <action name="Logout" class="nies.actions.Login" method="logout">
+        	<result type="redirectAction">Splash</result>
+        </action>
+        
+        <action name="LoginForm" class="nies.actions.NiesSupport">
+        	<result>/Login.jsp</result>
+        </action>
+        
+        <action name="UserList" class="nies.actions.UserList">
+        	<result name="success">/ListUsers.jsp</result>
+        </action>
+        
+        <action name="RelevancyLog" class="nies.actions.RelevancyLog">
+        	<result>/ViewRelevancyLog.jsp</result>
+        </action>
+        
+        <action name="ModelFile" class="nies.actions.ModelFile">
+        	<result>/ModelFile.jsp</result>
+        </action>
+        
+        <action name="" class="nies.actions.NiesSupport">
+        	<result>/Splash.jsp</result>
+        </action>
+        
+        <action name="*" class="nies.actions.NiesSupport">
+        	<result>/{1}.jsp</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,5 @@
+tomcat.home=/usr0/nlao/lib/hops.tomcat/lib
+tomcat.url=http://hops.ml.cmu.edu:8080/manager
+tomcat.username=postgres
+tomcat.password=adminadmin
+app.name=strutsnies
