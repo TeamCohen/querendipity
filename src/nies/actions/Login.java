@@ -1,5 +1,7 @@
 package nies.actions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -19,18 +21,32 @@ public class Login extends NiesSupport implements SessionAware, ServletContextAw
 	private String password;
 	private Map<String,Object> sessionMap;
 	private ApplicationDataController adc;
+	private List<String> users=new ArrayList<String>();
+	
+	
 	/** Action method for logging in. */
 	public String login() { 
-		User u = adc.authenticateUser(username, password);
+		if (username.length() == 0) return INPUT;
+		User u = null;
+		try {
+			u = adc.authenticateUser(username, password);
+		} catch(Exception e) { 
+			addActionError("Problem authenticating user"); 
+			return ERROR; 
+		}
 		if (u == null) {
 			if (username == null || !adc.getUview().getUserByUsernameMap().containsKey(username)) {
-				   addActionMessage("Unknown user "+username+".");
-			} else addActionMessage("Incorrect password for user "+username+".");
+				logger.debug("Unknown user "+username);
+			    addActionMessage("Unknown user "+username+".");
+			} else {
+				logger.debug("Incorrect password");
+				addActionMessage("Incorrect password for user "+username+".");
+			}
 			return INPUT;
 		}
 		sessionMap.put(Constants.USER,      u.getUsername());
 		sessionMap.put(Constants.USERTOKEN, u.getCurrentToken());
-                logger.debug("User "+u.getUsername()+" logged in");
+                logger.debug("User "+u.getUsername()+" logged in with token "+u.getCurrentToken());
 		return SUCCESS; 
 	}
 	
@@ -47,6 +63,10 @@ public class Login extends NiesSupport implements SessionAware, ServletContextAw
 	}
 	public void setServletContext(ServletContext sc) {
 		this.adc = (ApplicationDataController) sc.getAttribute("dataController");
+		logger.debug("Setting username set on "+this);
+		for (String u : adc.getUview().getUserByUsernameMap().keySet()) {
+			users.add(u);
+		}
 	}
 
 	public String getPassword() {
@@ -63,6 +83,11 @@ public class Login extends NiesSupport implements SessionAware, ServletContextAw
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public List<String> getUsers() { 
+		logger.debug("Returning username set on "+this);
+		return this.users; 
 	}
 	
 }

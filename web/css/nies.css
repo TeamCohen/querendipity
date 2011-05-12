@@ -1,24 +1,29 @@
 body {font: 10pt verdana}
+
 form {margin-bottom: 0; padding-bottom:0 }
+
 .nies {margin: 0; padding: 0}
-.niesresult { display: block; border: 1pt solid gray; margin:1em .1em .1em .1em; width: 90%; padding: .5em}
-.niesresult .result-head {display: block; xborder: 1pt solid blue; font-size: 12pt; font-weight: bold }
-.niesresult .result-cliptext {display: block; margin-left: 1em;xborder: 1pt solid red}
+
+.niesresult { display: block; border: 1pt solid gray; margin:1em 2em .1em .1em; padding: .5em}
+.niesresult .result-head {display: block; font-size: 12pt; font-weight: bold }
+.niesresult .result-cliptext {display: block; margin-left: 1em;}
 .niesresult .result-cliptext ul {margin-top:0; margin-bottom:0; padding-left:2em} 
 .niesresult .cliptext-heading {font-weight: bold; padding-right: 0.5em}
 .niesresult .cliptext-value   {width:100%}
-.niesresult .rank, .niesresult .title,.niesresult .relevanceFeedback {display:inline; padding-right: 1em}
-.niesresult .rank {width:4em}
-.niesresult .score {float:right;}
-
+.niesresult .rank              {width:2em; float:left; xborder: 1pt blue solid}
+.niesresult .relevanceFeedback {width:3em; float:left; xborder: 1pt red solid}
+.niesresult .relevanceFeedback img {height:1em; width: 1em; float:right}
+.niesresult .title             {padding-left:5.5em; padding-right: 5em; xborder: 1pt green solid}
+.niesresult .score             {width:5em; float:right; text-align:right; xborder: 1pt orange solid}
 .niesresult .prose-moreless {margin-left:0.8em}
-
 .niesresult td {vertical-align:top; font-size: 10pt;}
+.niesresult .link {font-weight:normal; font-size:9pt; padding-left:0.5em; white-space:nowrap}
 
-.niesresult .relevanceFeedback img {height:1em; width: 1em}
 .subtle {color: gray}
 
 .niesform ul.errorMessage {margin-top:0.2em;}
+
+img {border:none}
 
 #querynode div.niesresult {margin:0;}
 .hdivider td {border-top:1pt dashed #cdccc7;padding-top:0.2em}
@@ -32,15 +37,13 @@ form {margin-bottom: 0; padding-bottom:0 }
 
 .colorA { border-bottom: #899390 solid 1pt; background: #BEC9C6; color: #51776C }
 
-div.settings {
-	padding:1em;
-	text-align:left; }
+div.settings { padding:1em; text-align:left; }
 
 table.settings td {background:white }
 table.data td {background:white; padding: 0 .5em 0 .5em; font-size: 10pt;}
 table.data th {padding:0 .5em 0 .5em; font-size: 10pt;}
 
-  input.text {width:30em}
+input.text {width:30em}
   
   
 xa:link    { color: #1c1c52; text-decoration: underline; font-weight: bold }
@@ -84,7 +87,6 @@ a:visited.attrLink { font-weight: normal }
 .secondary-b-dark { background-color: #5b6f26 }
 .secondary-b-4 { background-color: #E6E9DD }
 .secondary-b-5 { background-color: #E6E9E0 }
-
 
 .vocabtab .type     {border:1pt black solid;}
 .vocabtab .title    {font-weight:bold; background:#cceecc; display:inline; margin-right:1em}
@@ -130,10 +132,9 @@ a:visited.attrLink { font-weight: normal }
 .r9  {background:#8DCCA8}
 .r10 {background:#80B49B}
 
-
 .result-title                         {float:left; width:80%;}
 .result-explanation                   {}
-.result-explanation .totalScore       {float:right; width:10em; text-align:right}
+.result-explanation .totalScore       {float:right; width:10em; text-align:right; padding-top: 0.5em}
 .result-explanation .reasonsContainer {clear:left; padding-top: 0.5em} 
 
 .result-explanation a:link    {font-weight:normal;text-decoration:none;color:#332211}

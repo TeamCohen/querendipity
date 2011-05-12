@@ -1,6 +1,8 @@
 /**************************************************************************/
 /* Developed by Carnegie-Mellon Machine Learning Department
- * Written by Andrew Arnold (aarnold@cs.cmu.edu)
+ * Started by Andrew Arnold (aarnold@cs.cmu.edu)
+ * Continued by Katie Rivard (krivard@cs.cmu.edu)
+ * Ni Lao (nlao@cs.cmu.edu)
 /**************************************************************************/
 package nies.metadata;
 
@@ -8,25 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
 import java.io.*;
 
-import java.util.List;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import javax.swing.border.*;
 import javax.xml.bind.JAXBException;
 
-import java.awt.*;
-import java.awt.event.*;
 
-import ghirl.util.*;
 import ghirl.graph.*;
-import edu.cmu.minorthird.util.gui.*;
-import edu.cmu.minorthird.util.StringUtil;
-import edu.cmu.minorthird.util.ProgressCounter;
 import edu.cmu.pra.CTag;
 import edu.cmu.pra.graph.IGraph;
 import edu.cmu.pra.model.ModelPathRank;
@@ -34,9 +23,6 @@ import edu.cmu.pra.model.PRAModel;
 import edu.cmu.lti.util.run.Param;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
-import nies.metadata.*;
 import nies.ui.Tab;
 
 public class Init extends HttpServlet {
@@ -70,15 +56,15 @@ public class Init extends HttpServlet {
 		servletContext.setAttribute("pmidService",   new NodeService("pmid",  webappRoot));
 		servletContext.setAttribute("geneService",   new NodeService("gene",  webappRoot));
 
-		String tabTypes=NiesConfig.getProperty("nies.tabtypes","");
-		log.info("tabTypes="+tabTypes);
-		if(tabTypes.contains(Tab.PAPER) || tabTypes.contains(Tab.PMPAPER)) {
-			log.info("loading paperCollection info...");
-			PaperCollection paperCollection = new PaperCollection(webappRoot);
-			servletContext.setAttribute("paperCollection", paperCollection);	    
-			//log.warn("not found 17364011-->"+paperCollection.getStruct("17364011"));			
-		} else 
+
+		if(NiesConfig.getProperty(PaperCollection.PAPERCOLLECTION_PROP) != null) {
+			log.info("Loading papercollection...");
+			PaperCollection paperCollection = new PaperCollection();
+			servletContext.setAttribute("paperCollection", paperCollection);	    		
+		} else {
+			log.info("No papercollection specified.");
 			servletContext.setAttribute("paperCollection", null);
+		}
 
 
 		log.info("loading external Tab configurations...");
@@ -130,7 +116,6 @@ public class Init extends HttpServlet {
 		System.setProperty("java.awt.headless", "true");
 		String graphName = ghirl.util.Config.getProperty(ghirl.util.Config.GRAPHNAME); 
 		// make the graph
-		log.info("init: building graph="+dbDirname+":"+graphName);
 
 		// added March 2010 due to strange "Permission Denied" errors when opening
 		// the IndexReader (even when graph directory was owned by tomcat...)
@@ -142,27 +127,28 @@ public class Init extends HttpServlet {
 		String dbStoreType = ghirl.util.Config.getProperty(GHIRL_DBSTORE_PROP);
 		Graph g;
 		if(GRAPHSTORE_DISK.equals(dbStoreType)) {
+			if(log.isInfoEnabled()) log.info("Building GraphFactory -textgraph "+graphName);
 			g = GraphFactory.makeGraph("-textgraph",graphName,useMutable ? "-a" : "-r");//new TextGraph(graphName);
 		} 
 		else if(GRAPHSTORE_MEMORY.equals(dbStoreType)) {
+			if(log.isInfoEnabled()) log.info("Building GraphFactory -memorygraph -load nodes.ghirl,edges.ghirl");
 			g = GraphFactory.makeGraph("-memorygraph","-load","nodes.ghirl,edges.ghirl");
 		} 
 		else if(GRAPHSTORE_BSH.equals(dbStoreType)) {
+			if(log.isInfoEnabled()) log.info("Building GraphFactory -bshgraph "+graphName);
 			g = GraphFactory.makeGraph("-bshgraph",graphName+".bsh");
 		}
 		else if(GRAPHSTORE_CMPT.equals(dbStoreType) ||
 				 GRAPHSTORE_CMPTXT.equals(dbStoreType)) {
-			SparseCompactGraph compactGraph = new SparseCompactGraph();
-			
-
 			File compactDir=new File(dbDirname,graphName);
-			//log.info("compactDir="+compactDir);
-		
 			if (!compactDir.exists())//"graphSize.pct"
 				compactDir=new File(dbDirname,graphName+ "_compact");
-
 			if (!compactDir.exists())
 					log.error("cannot find graph="+compactDir);
+			
+			if(log.isInfoEnabled()) log.info("Building "+(useMutable?"Mutable":"")+"TextGraph "+graphName+" SparseCompactGraph "+compactDir.getPath());
+			
+			SparseCompactGraph compactGraph = new SparseCompactGraph();
 				
 			compactGraph.load(compactDir.getPath());
 
@@ -170,7 +156,7 @@ public class Init extends HttpServlet {
 			if (GRAPHSTORE_CMPTXT.equals(dbStoreType)) {
 				if (useMutable) {
 					if (log.isInfoEnabled()) 
-						log.info("Building MutableTextGraph(textindex ["+graphName+"], innergraph nestedgraph(compactgraph ["+compactDir+"], files ["+loadList+"]))");
+						log.info("Creating MutableTextGraph(textindex ["+graphName+"], innergraph nestedgraph(compactgraph ["+compactDir+"], files ["+loadList+"]))");
 					MutableGraph innerGraph = new NestedGraph(compactGraph);
 					GraphLoader loader = new GraphLoader(innerGraph);
 					File ghirlDir = new File(dbDir, graphName+"_ghirl");
@@ -182,7 +168,7 @@ public class Init extends HttpServlet {
 					g = new MutableTextGraph(graphName, 'a', innerGraph);
 				} else {
 					if (log.isInfoEnabled())
-						log.info("Building TextGraph(textindex ["+graphName+"], innergraph compactgraph ["+compactDir+"])");
+						log.info("Creating TextGraph(textindex ["+graphName+"], innergraph compactgraph ["+compactDir+"])");
 					g = new TextGraph(graphName,compactGraph);
 				}
 			} else

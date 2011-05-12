@@ -27,77 +27,71 @@ import edu.cmu.lti.algorithm.sequence.Seq;
 import edu.cmu.pra.data.PMAbsInfor;
 
 public class PaperCollection {
-
+	public static final String PAPERCOLLECTION_PROP = "nies.paperCollection";
+	public static final String METADATA_DIRECTORY_PROP = "nies.metadataDirectory";
 	public HashMap<String, PMAbsInfor> mCollection = new HashMap<String, PMAbsInfor>();
-  //static final List authors = new ArrayList();
-  private static final Logger log = Logger.getLogger(PaperCollection.class);
+	//static final List authors = new ArrayList();
+	private static final Logger log = Logger.getLogger(PaperCollection.class);
 
-  public static String getStackTrace(Throwable t) {
-    StringWriter sw = new StringWriter();
-    PrintWriter pw = new PrintWriter(sw, true);
-    t.printStackTrace(pw);
-    pw.flush();
-    sw.flush();
-    return sw.toString();
-  }
+	public static String getStackTrace(Throwable t) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw, true);
+		t.printStackTrace(pw);
+		pw.flush();
+		sw.flush();
+		return sw.toString();
+	}
 
-  public PMAbsInfor getStruct(String pmid){
-  	return mCollection.get(pmid);
-  }
-  // static {
-  private void init(String webappRoot) {
-    //log.debug("webapp root: "+webappRoot);
-    String dir = NiesConfig.getProperty("nies.metadataDirectory"); // webappRoot + NiesConfig.getProperty("nies.metadataDirectory");
-    String fn = NiesConfig.getProperty("nies.paperCollection");
-    init(dir, fn);
-  }
-  public void init(String dir,String fn) {
-    log.info("loading PaperCollection="+dir+fn);
-    int row = 0;
+	public PMAbsInfor getStruct(String pmid){
+		return mCollection.get(pmid);
+	}
+	// static {
+	private void init() {
+		String dir = NiesConfig.getProperty(METADATA_DIRECTORY_PROP); // webappRoot + NiesConfig.getProperty("nies.metadataDirectory");
+		String fn = NiesConfig.getProperty(PAPERCOLLECTION_PROP);
+		init(dir, fn);
+	}
+	public void init(String dir,String fn) {
+		log.info("loading PaperCollection="+dir+fn);
+		int row = 0;
 
-    try{
-    	//for (String line: Seq.enuLines(dir+fn)){
-    		//PMAbsInfor ab= new PMAbsInfor(line);
-    	for (PMAbsInfor ab: PMAbsInfor.reader(dir+fn)){
-    		++row;
-    		if (ab==null) continue;
-    		ab.abst="";//remove abstract to save memory
-    		mCollection.put(ab.pmid, ab);
-    	}
-    	
-    } catch (Exception e){//Catch exception if any
-      log.info("Error: " + e.getMessage() + ", " + getStackTrace(e));  
-      //System.err.println("Error: " + e.getMessage());
-    } 
-    log.info("done with "+row+" rows, and |mCollection|="+mCollection.size());
-  }
-  /**
-   * Constructor 
-   */
-  public PaperCollection() {
-    super();
-  }
+		try{
+			//for (String line: Seq.enuLines(dir+fn)){
+			//PMAbsInfor ab= new PMAbsInfor(line);
+			for (PMAbsInfor ab: PMAbsInfor.reader(dir+fn)){
+				++row;
+				if (ab==null) continue;
+				ab.abst="";//remove abstract to save memory
+				mCollection.put(ab.pmid, ab);
+			}
 
-  public PaperCollection(String webappRoot) {
-    this.init(webappRoot);
-  }
+		} catch (Exception e){//Catch exception if any
+			log.info("Error: " + e.getMessage() + ", " + getStackTrace(e));  
+			//System.err.println("Error: " + e.getMessage());
+		} 
+		log.info("done with "+row+" rows, and |mCollection|="+mCollection.size());
+	}
 
-  public List getAuthors(String pmid) {
-    return new ArrayList( mCollection.get(pmid).vAuthors);
-  }
+	public PaperCollection() {
+		this.init();
+	}
 
-  public List getGenes(String pmid) {
-    return new ArrayList();// mCollection.get(pmid).v;
-  }
+	public List getAuthors(String pmid) {
+		return new ArrayList( mCollection.get(pmid).vAuthors);
+	}
 
-  public int getSize() {
-    return mCollection.size();
-  }
-  
-  public String getCitation(String pmid) {
-  	PMAbsInfor ab= mCollection.get(pmid);
-  	if (ab==null) return null;
-    return ab.getCitation() ;
-  }  
+	public List getGenes(String pmid) {
+		return new ArrayList();// mCollection.get(pmid).v;
+	}
+
+	public int getSize() {
+		return mCollection.size();
+	}
+
+	public String getCitation(String pmid) {
+		PMAbsInfor ab= mCollection.get(pmid);
+		if (ab==null) return null;
+		return ab.getCitation() ;
+	}  
 
 }

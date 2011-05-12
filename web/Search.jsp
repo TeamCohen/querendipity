@@ -11,7 +11,7 @@
 
 <s:action name="Header" executeResult="true"/>
 
-<center><img src="images/nies-logo.gif"/></center>
+<center><img src="images/logo-big.png"/></center>
 <div style="margin-top:2em; margin-left:6em;">
 <tiles:insertTemplate template="SearchFormOnly.jsp" flush="true"/>
 </div>

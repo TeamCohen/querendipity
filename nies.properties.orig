@@ -1,13 +1,18 @@
+### MISCELLANEOUS ###
 # These locations are with respect to the server:
-nies.metadataDirectory=/usr0/share/nies/data/
-nies.userdb=/usr0/share/nies/nies_userdb
-nies.relevancedb=/usr0/share/nies/nies_reldb
+nies.metadataDirectory=/usr0/share/nies/yeast/data/
+# *Parent* directory must exist on server to trigger initialization; otherwise uses the existing DB
+nies.userdb=/usr0/share/nies/yeast/nies_userdb
+nies.relevancedb=/usr0/share/nies/yeast/mb_reldb
 
-# Users' reading history files go here -- must be tomcat-writable
+# Directory must already exist on server.
 nies.readinghistory=/usr0/share/nies/yeast/PRA/UserHistory
 
-# Uncomment to show all results in a special tab (default is off)
-#nies.allTab=true
+# For Paper, Gene, Author, and PMPaper tabs; must be findable in ${nies.metadataDirectory}
+nies.paperCollection=pmid.sgd.crawl.ex
+
+# For AjaxStrings servlet. Must be findable in ${nies.metadataDirectory}
+nies.ajaxStringsFile=model.cite,model.read
 
 # Uncomment to add a default query or space-delimited list of stop edges.
 # These can also be configured at runtime from the admin settings page of the webapp.
@@ -18,44 +23,74 @@ nies.readinghistory=/usr0/share/nies/yeast/PRA/UserHistory
 # Space-separated list of fields from {genes} (boring for now I know ^_^)
 #nies.extraSearchFields=genes
 
+
+### SEARCH ALGORITHM CONFIGURATION:
+
+# Comma-separated list of names of search algorithms to provide. These will be configured below.
+nies = Search,ModelBasedSearch
+
+# For each searcher specify:
+# 	nies.searcher.[searchername] = [corresponding action name from struts.xml]
+# 	neis.searcher.[searchername].tabs = [comma-separated list of tabs configured below]
+
+nies.searcher.Search=Search
+nies.searcher.Search.tabs=Papers,Genes,Authors,Explore
+
+nies.searcher.ModelBasedSearch=ModelBasedSearch
+nies.searcher.ModelBasedSearch.tabs=Papers,Reasons,Explore
+
+# If an attribute has more than this many values, the list will be truncated (for both server and client performance issues)
+nies.alltab.attributes.maxvalues=100
+
 ### TAB CONFIGURATION:
 
-# First list the tab titles as you want them to appear in the interface.
-# These should be unique and subject to the following restrictions:
-#   - "Other" is a reserved title for the allTab so don't use it.
-#   - Do not include spaces.
-#   - '_' is ok; use other special characters at your own risk 
-nies.tabs=Papers,Papers_tx,Genes,Authors,Terms
-
-# Next list the tab type for each tab (same order as nies.tabs)
-# NB These are the keys into the .class map in Tab
-nies.tabtypes=paper,configurable,configurable,configurable,configurable
+# Begin with:
+#	nies.tab.[tabname]=[displayType from nies.ui.Tab]
+#	nies.tab.[tabname].title=[string to display in the row of tabs along the top of the results interface]
 
 # For each "configurable"-type tab, specify:
-# 	nies.[title].filter - the filter string that selects nodes displayable by this tab
-#	nies.[title].attributes - the list of attributes as displayed in the block for each search result
-#	nies.[title].[attribute] - for each attribute, the PathSearcher list of edges to traverse to select nodes for display
-# Attributes *may* include spaces in the .attributes list, but replace these with _ when you give their PathSearcher list.
+# 	nies.tab.[tabname].filter=[ghirl.graph.NodeFilter filter string that selects nodes displayable by this tab]
+#	nies.tab.[tabname].label=[ghirl.graph.PathSearcher path that will retrieve the title of the result. Leave blank to use the nodename.]
+#	nies.tab.[tabname].attributes=[comma-separated list of attribute titles; spaces are allowed]
+#	nies.tab.[tabname].attribute.[attribute_title]=[ghirl.graph.PathSearcher path that will retrieve the attribute values. Also note spaces in the attribute title have been replaced with '_']
 
-nies.Papers_tx.filter=isa=$paper
-nies.Papers_tx.attributes=Citation,Authors,Genes
-nies.Papers_tx.Citation=hasKeywords
-nies.Papers_tx.Authors=paperIsWrittenByAuthor hasKeywords
-nies.Papers_tx.Genes=geneIsMentionedInPaperInverse
-nies.Papers_tx.label=
+nies.tab.All=tab
+nies.tab.All.title=All (debug)
 
-nies.Genes.filter=isa=$gene
-nies.Genes.attributes=Auxilliary Genes,Researchers
-nies.Genes.Auxilliary_Genes=keyGeneIsAssociatedWithAuxGene
-nies.Genes.Researchers=geneIsMentionedInPaper paperIsWrittenByAuthor hasKeywords
-nies.Genes.label=
+nies.tab.Reasons=pmpaper
+nies.tab.Reasons.title=Reasons
 
-nies.Authors.filter=isa=$author
-nies.Authors.attributes=Publications,Genes
-nies.Authors.Publications=paperIsWrittenByAuthorInverse hasKeywords
-nies.Authors.Genes=paperIsWrittenByAuthorInverse geneIsMentionedInPaperInverse
-nies.Authors.label=
+nies.tab.Explore=explore
+nies.tab.Explore.title=Explore
 
-nies.Terms.filter=isa=$TERM
-nies.Terms.attributes=
-nies.Terms.label=
+nies.tab.Papers=configurable
+nies.tab.Papers.title=Papers
+nies.tab.Papers.filter=hasTitle=*
+nies.tab.Papers.label=hasTitle
+nies.tab.Papers.attributes=Journal,Authors,Genes,Year,PMID,Abstract
+nies.tab.Papers.attribute.Journal=Journal
+nies.tab.Papers.attribute.Authors=hasAuthor
+nies.tab.Papers.attribute.Genes=Gene
+nies.tab.Papers.attribute.Year=Year
+nies.tab.Papers.attribute.PMID=hasTitle _hasTitle
+nies.tab.Papers.attribute.Abstract=hasAbstract
+
+nies.tab.Genes=configurable
+nies.tab.Genes.title=Genes
+nies.tab.Genes.filter=_Gene=*
+nies.tab.Genes.label=
+#nies.Genes.attributes=Full Name,Synonyms,Researchers,Publications
+nies.tab.Genes.attributes=Researchers,Publications
+nies.tab.Genes.attribute.Full_Name=hasSynonymInverse hasFullName
+nies.tab.Genes.attribute.Synonyms=hasSynonymInverse hasSynonym
+nies.tab.Genes.attribute.Publications=_Gene hasTitle
+nies.tab.Genes.attribute.Researchers=_Gene hasAuthor
+
+nies.tab.Authors=configurable
+nies.tab.Authors.title="Authors"
+nies.tab.Authors.filter=_hasAuthor=*
+nies.tab.Authors.label=
+nies.tab.Authors.attributes=Publications,Coauthors,Genes
+nies.tab.Authors.attribute.Publications=_hasAuthor hasTitle
+nies.tab.Authors.attribute.Coauthors=_hasAuthor hasAuthor
+nies.tab.Authors.attribute.Genes=_hasAuthor Gene

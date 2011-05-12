@@ -16,13 +16,22 @@ public class ExploreTab extends Tab {
 	private static final Logger logger = Logger.getLogger(ExploreTab.class);
 	private Graph graph;
 	protected ExploreTab(String name) {
-		this.title=name;
-		this.displayType=Tab.EXPLORE;
+		Graph g = null;
 		try {
-			graph = (Graph) ServletActionContext.getServletContext().getAttribute("theGraph");
+			g = (Graph) ServletActionContext.getServletContext().getAttribute("theGraph");
 		} catch (NullPointerException e) {
 			logger.error("No graph...!");
 		}
+		this.construct(name,g);
+	}
+	protected ExploreTab(String name, Graph g) {
+		construct(name,g);
+	}
+	protected void construct(String name, Graph g) {
+
+		this.title=name;
+		this.displayType=Tab.EXPLORE;
+		this.graph = g;
 	}
 	public void setGraph(Graph g) { this.graph = g; }
 	protected Result processResult(Object graphid, Result v_tabresult) {

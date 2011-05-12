@@ -24,12 +24,13 @@ import net.sourceforge.ajaxtags.xml.AjaxXmlBuilder;
 public class AjaxStringServlet extends BaseAjaxServlet {
 	public static final String AJAXSTRINGS_PROPERTY="nies.ajaxStringsFile";
 	private static final Logger log = Logger.getLogger(AjaxStringServlet.class);
-	private List<List<String>> ajaxData;
+	private Map<String,List<List<String>>> ajaxDataByFile;
 	private String modelFile;
+	private String defaultDataFile=null;
 	
 	public void init() {
 		log.info("Loading AjaxStringServlet strings..."); 
-		ajaxData = new ArrayList<List<String>>();
+		ajaxDataByFile = new TreeMap<String,List<List<String>>>();
 		String ajaxStringsFileList = NiesConfig.getProperty(AJAXSTRINGS_PROPERTY);
 		if (ajaxStringsFileList == null) return;
 		String[] ajaxStringsFiles = ajaxStringsFileList.split(",");
@@ -37,6 +38,10 @@ public class AjaxStringServlet extends BaseAjaxServlet {
 		BufferedReader reader;
 		StringBuilder modelfilebuilder = new StringBuilder();
 		for (String ajaxStringsFile : ajaxStringsFiles) {
+			List<List<String>> ajaxData = new ArrayList<List<String>>();
+			ajaxDataByFile.put(ajaxStringsFile, ajaxData);
+			if (defaultDataFile==null) defaultDataFile=ajaxStringsFile;
+			
 			try {
 				reader = new BufferedReader(new FileReader(new File(
 						metadatadir,ajaxStringsFile)));
@@ -75,19 +80,27 @@ public class AjaxStringServlet extends BaseAjaxServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		String fieldStr = request.getParameter("field");
 		String idStr = request.getParameter("id");
+		String fileStr = request.getParameter("file");
+		if (fileStr == null || fileStr == "") {
+			log.info("No or empty file specified; using default '"+defaultDataFile+"'");
+			fileStr=defaultDataFile;
+		}
 		try {
 			int field = Integer.parseInt(fieldStr);
 			int id    = Integer.parseInt(idStr);
-		if (field >= 0) {
-        String theXmlString = new AjaxXmlBuilder().addItem(ajaxData.get(field).get(id)).toString();
-        return theXmlString;
-		} else {
-			AjaxXmlBuilder builder = new AjaxXmlBuilder();
-			for (List<String> fieldtype : ajaxData) { 
-				if (fieldtype.size() > id) builder.addItem(fieldtype.get(id));
+			List<List<String>> ajaxData = ajaxDataByFile.get(fileStr);
+			if (ajaxData == null)
+				return new AjaxXmlBuilder().addItem("Error: No ajax data stored under file name '"+fileStr+"'").toString();
+			if (field >= 0) {
+				String theXmlString = new AjaxXmlBuilder().addItem(ajaxData.get(field).get(id)).toString();
+				return theXmlString;
+			} else {
+				AjaxXmlBuilder builder = new AjaxXmlBuilder();
+				for (List<String> fieldtype : ajaxData) { 
+					if (fieldtype.size() > id) builder.addItem(fieldtype.get(id));
+				}
+				return builder.toString();
 			}
-			return builder.toString();
-		}
 		} catch(NumberFormatException e) {
 			return new AjaxXmlBuilder().addItem("Error: Bad format for field('"+fieldStr+"') or id ('"+idStr+"')").toString();
 		}

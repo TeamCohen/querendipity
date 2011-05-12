@@ -140,10 +140,10 @@ public class ApplicationDataController extends HttpServlet {
 	 * @throws DatabaseException
 	 * @throws Exception
 	 */
-	public void addUser(String username, String pass, String email) throws DatabaseException, Exception {
-		TransactionRunner runner = new TransactionRunner(udb.getEnv());
-		runner.run(new AddUser(username, pass, email));
-	}
+//	public void addUser(String username, String pass, String email, String publishAs) throws DatabaseException, Exception {
+//		TransactionRunner runner = new TransactionRunner(udb.getEnv());
+//		runner.run(new AddUser(username, pass, email, publishAs));
+//	}
 	
 	/** Save updated data for the specified user.
 	 * 
@@ -165,16 +165,23 @@ public class ApplicationDataController extends HttpServlet {
 	 * @param username
 	 * @param passwordToken The plaintext password or session token.
 	 * @return A User object if authentication succeeds; null otherwise.
+	 * @throws Exception 
+	 * @throws DatabaseException 
 	 */
-	public User authenticateUser(String username, String passwordToken) {
+	public User authenticateUser(String username, String passwordToken) throws DatabaseException, Exception {
 		logger.debug("Authenticating "+username);
 		if (username == null || !uview.getUserByUsernameMap().containsKey(username)) return null;
 		User candidate = uview.getUserByUsernameMap().get(username);
+		logger.debug("Matching hash "+candidate.getPassHash());
 		if (candidate.getPassHash().equals(UserData.enhash(passwordToken))) {
+			logger.debug("Hash matched.");
 			candidate.updateToken();
+			saveUser(candidate);
 			return candidate;
 		}
+		logger.debug("Matching token "+candidate.getCurrentToken());
 		if (candidate.getCurrentToken().equals(passwordToken)) {
+			logger.debug("Token matched.");
 			return candidate;
 		}
 		return null;
@@ -210,34 +217,35 @@ public class ApplicationDataController extends HttpServlet {
 			logger.debug("TransactionWorker AddTestUsers");
 			Map<String, User> users = uview.getUserMap();
 			if (users.isEmpty()) {
-				User u = new User(UserData.newKey(),"Harry Q. Bovik",UserData.enhash("insecure"),"bovik@cs.cmu.edu");
+				User u = new User(UserData.newKey(),"guest",UserData.enhash("querendipity"),"bovik@cs.cmu.edu","Woolford_JL");
 				users.put(u.getUid(), u);
-				u = new User(UserData.newKey(),"Administrator",UserData.enhash("invisible ribosome"),"krivard@andrew.cmu.edu");
+				u = new User(UserData.newKey(),"Administrator",UserData.enhash("invisible ribosome"),"krivard@andrew.cmu.edu","Woolford_JL");
 				users.put(u.getUid(), u);
 
 				int nusers=0;
 				for (Object user : uview.getUserEntrySet()) nusers++;
 				logger.info("Added "+nusers+" test users");
 			} else {
-				logger.info("No test users added; database already nonempty");
+				logger.info("No test users added; database has "+users.size()+" entries");
 			}
 		}
 	}
 	
 	/** Transaction to add a user to the database. */
 	private class AddUser implements TransactionWorker {
-		private String username, password, email;
-		public AddUser(String username, String pass, String email) {
+		private String username, password, email, publishAs;
+		public AddUser(String username, String pass, String email, String publishAs) {
 			this.username=username;
 			this.password=pass;
 			this.email = email;
+			this.publishAs=publishAs;
 		}
 		public void doWork() {
 			logger.debug("TransactionWorker AddUser");
 			Map<String, User> users = uview.getUserMap();
 			String key =UserData.newKey(); 
 			users.put(key,
-					  new User(key, username, UserData.enhash(password), email));
+					  new User(key, username, UserData.enhash(password), email, publishAs));
 			logger.info("Added user "+username);
 		}
 	}

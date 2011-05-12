@@ -7,7 +7,9 @@ import java.util.*;
 
 import ghirl.graph.Graph;
 import ghirl.util.Distribution;
+import nies.exceptions.BadConfigurationError;
 import nies.metadata.EntityCollection;
+import nies.metadata.NiesConfig;
 import nies.metadata.PaperCollection;
 import nies.ui.vocabulary.Transformer;
 
@@ -26,6 +28,8 @@ public class Tab extends Transformer {
 	                           VOCABULARY="vocabulary",
 	                           EXPLORE="explore",
 	                           EXTERNAL = "external";
+	public static final String NIES_TABTYPE_PROP="nies.tab.%s";
+	public static final String NIES_TABTITLE_PROP="nies.tab.%s.title";
 	protected static Map<String,Class> tabMap   = new HashMap<String,Class>();
 	protected static DecimalFormat decFormatter = new DecimalFormat ("0.0000");
     protected static DecimalFormat expFormatter = new DecimalFormat ("0.00E0");
@@ -180,6 +184,11 @@ public class Tab extends Transformer {
 		
 	}
 	
+
+	public static Tab makeTab(String tabname, Graph graph) {
+		return makeTab(NiesConfig.getProperty(String.format(NIES_TABTYPE_PROP, tabname)),tabname,graph);
+	}
+	
 	public static Tab makeTab(String tabtype, String tabname) { return makeTab(tabtype,tabname,null); }
 	/**
 	 * Factory method for Tab creation keyed to a string type.
@@ -189,10 +198,12 @@ public class Tab extends Transformer {
 	public static Tab makeTab(String tabtype, String tabname, Graph graph) {
 		try {
 			Class tabclass = Tab.tabMap.get(tabtype);
-			if (null == tabclass) throw new RuntimeException("No class for tabtype ["+tabtype+"]");
+			if (null == tabclass) throw new BadConfigurationError("No class for tabtype ["+tabtype+"]");
 			Tab tab = (graph == null) ? constructTab(tabclass,tabname) : constructTab(tabclass,tabname,graph);
 			if (null == tab) throw new RuntimeException("Tab instance didn't create?");
 			tab.setDisplayType(tabtype);
+			String tabtitle = NiesConfig.getProperty(String.format(NIES_TABTITLE_PROP,tabname));
+			if (tabtitle != null) tab.setTitle(tabtitle);
 			log.info(tabtype +"-type Tab created.");
 			return tab;
 		} catch (InstantiationException e) { throw new RuntimeException(e); }

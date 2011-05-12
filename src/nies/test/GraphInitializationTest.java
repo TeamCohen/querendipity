@@ -1,7 +1,11 @@
 package nies.test;
 
 
+import edu.cmu.lti.util.run.Param;
+import edu.cmu.pra.CTag;
 import edu.cmu.pra.graph.IGraph;
+import edu.cmu.pra.model.ModelPathRank;
+import edu.cmu.pra.model.PRAModel;
 
 import ghirl.graph.Graph;
 import ghirl.graph.GraphId;
@@ -16,6 +20,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import nies.metadata.Init;
+import nies.metadata.NiesConfig;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.BasicConfigurator;
@@ -73,6 +78,7 @@ public class GraphInitializationTest {
 	@Test
 	public void testModelBasedGraph() throws FileNotFoundException, IOException {
 		Config.getProperties().load(new FileReader("ghirl.properties"));
+		NiesConfig.getProperties().load(new FileReader("nies.properties"));
 		
 		BasicConfigurator.resetConfiguration();
 		BasicConfigurator.configure();
@@ -94,14 +100,15 @@ public class GraphInitializationTest {
 		GraphId firstnodeId = GraphId.fromString(firstnode);
 
 		Config.setProperty(TextGraph.CONFIG_PERSISTANCE_PROPERTY, "ghirl.graph.PersistantGraphTokyoCabinet");
-		TextGraph testgraph = new TextGraph("Yeast2.cite-complete");
-		assertTrue(testgraph.contains(firstnodeId));
-		assertNotNull(testgraph.getTextContent(firstnodeId));
+		graph = new TextGraph("Yeast2.cite-complete");
+		assertTrue(graph.contains(firstnodeId));
+		assertNotNull(graph.getTextContent(firstnodeId));
 		
 		Init init = new Init();
-		Graph g=null;
+		
+		graph=null;
 		try {
-			g = Init.makeGraph();
+			graph = Init.makeGraph();
 			log.info("init: graph built");
 			log.info("init: saving the servletContext");
 //			servletContext.setAttribute(SERVLETCONTEXT_GRAPH, g);
@@ -110,33 +117,74 @@ public class GraphInitializationTest {
 			String fnModel=  ghirl.util.Config.getProperty("pra.model",""); 
 			model:
 				if (fnModel.length()>0) {
-					IGraph ig=null;
-					if (g instanceof IGraph) ig = (IGraph) g;
-					else if (g instanceof TextGraph 
-							&& ((TextGraph)g).getInnerGraph() instanceof IGraph) ig = (IGraph) ((TextGraph)g).getInnerGraph();
+					igraph=null;
+					if (graph instanceof IGraph) igraph = (IGraph) graph;
+					else if (graph instanceof TextGraph 
+							&& ((TextGraph)graph).getInnerGraph() instanceof IGraph) igraph = (IGraph) ((TextGraph)graph).getInnerGraph();
 					else {
 						log.error("Couldn't find a valid graph to load the model into. Graph or inner graph must implement IGraph.");
 						break model;
 					}
 //					servletContext.setAttribute(SERVLETCONTEXT_IGRAPH,ig);
-					init.makeModel(fnModel,ig);
+					//init.makeModel(fnModel,igraph);
+					makeModelCopy(fnModel,igraph);
 				}
 		} catch (Exception e) {
 			log.error("failed to make graph: ",e);
 		}
 		
-		assertNotNull(g);
+		assertNotNull(graph);
 		
-		assertTrue("Must contain "+firstnode,g.contains(firstnodeId));
-		Distribution qdist = g.asQueryDistribution(firstnode);
+		assertTrue("Must contain "+firstnode,graph.contains(firstnodeId));
+		Distribution qdist = graph.asQueryDistribution(firstnode);
 		firstnodeId = (GraphId) qdist.iterator().next();
 		assertEquals("Must have nonzero query distribution for "+firstnode,qdist.size(),1);
-		Distribution neigh1 = g.walk1(firstnodeId); 
+		Distribution neigh1 = graph.walk1(firstnodeId); 
 		assertTrue(firstnode+" must have neighbors",neigh1.size()>0);
 		
-		assertNotNull(g.getTextContent(firstnodeId));
+		assertNotNull(graph.getTextContent(firstnodeId));
 		
 		
 	}
+	public Graph graph;
+	public IGraph igraph;
+	public PRAModel netCite;
+	public PRAModel netRead;
+	
+	public void makeModelCopy(String fnModel, IGraph g) {
+		String fd=  ghirl.util.Config.getProperty("pra.dir"); 
+		String fnConf=  ghirl.util.Config.getProperty("pra.conf");   
+		log.info("loading model="+fd+fnModel);
+
+			try {			
+
+
+				log.info("pra.dir="+fd);
+				log.info("pra.conf="+fnConf);
+				log.info("pra.model="+fnModel);
+
+
+				Param.overwriteFrom(fd+fnConf);
+				Param.overwrite("dataFolder="+fd);
+
+
+				
+				netCite=new ModelPathRank();
+				log.info(netCite.schema.vRel.getVS(CTag.nameS));
+
+				netCite.loadModel(fd+fnModel+".cite");
+				netCite.setGraph(g);
+				log.info(netCite.vsPath.join("\n"));
+
+				netRead=new ModelPathRank();
+				netRead.loadModel(fd+fnModel+".read");
+				netRead.setGraph(g);
+				log.info(netRead.vsPath.join("\n"));
+
+			} catch (Exception e){
+				log.error("failed to make graph: ",e);
+			}
+	}
+	
 
 }

@@ -10,8 +10,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 
-import nies.actions.ReadingHistory;
-import nies.metadata.EntityCollection;
+import nies.actions.Profile;
 import nies.metadata.Init;
 import nies.metadata.NiesConfig;
 
@@ -25,7 +24,6 @@ import edu.cmu.lti.util.html.EColorScheme;
 import edu.cmu.pra.learner.Query;
 import edu.cmu.pra.model.PRAModel;
 import ghirl.graph.CompactGraph;
-import ghirl.graph.Graph;
 import ghirl.graph.GraphId;
 import ghirl.graph.ICompact;
 import ghirl.graph.WeightedTextGraph;
@@ -35,9 +33,10 @@ import ghirl.util.Distribution;
 public class ModelBasedSearch extends Search {
 	private static final Logger logger = Logger.getLogger(ModelBasedSearch.class);
 	private int year=2009;
-	protected EntityCollection entityCollection;
+//	protected EntityCollection entityCollection;
 	protected PRAModel modelCite;
 	protected PRAModel modelRead;
+	protected ICompact igraph;
 
 	public void setYear(int y) { this.year = y; }
 	public int getYear() { return this.year; }
@@ -45,6 +44,7 @@ public class ModelBasedSearch extends Search {
 	public ModelBasedSearch(){
 		sModel=ghirl.util.Config.getProperty("pra.model"); 
 	}
+	public String form() { return SUCCESS; }
 
 	boolean usingHistory=false;
 	public void setUsingHistory(boolean usingHistory) {
@@ -81,16 +81,12 @@ public class ModelBasedSearch extends Search {
 		return debug;
 	}
 
-	public void prepare() {
-		super.prepare();
-	}
-
 	@Override
 	public void setServletContext(ServletContext context) {
 		super.setServletContext(context);
-		this.graph = (Graph) context.getAttribute(Init.SERVLETCONTEXT_IGRAPH);
-		if (this.graph == null) return;
-		this.entityCollection = (EntityCollection) context.getAttribute("entityCollection");
+		this.igraph = (ICompact) context.getAttribute(Init.SERVLETCONTEXT_IGRAPH);
+		if (this.igraph == null) return;
+//		this.entityCollection = (EntityCollection) context.getAttribute("entityCollection");
 
 		String fnModel=  ghirl.util.Config.getProperty("pra.model"); 
 		if (fnModel!=null) if (fnModel.length()>0){
@@ -107,7 +103,7 @@ public class ModelBasedSearch extends Search {
 
 
 	protected boolean hasSearchTerms() { 
-		ICompact g = (ICompact)graph;
+//		ICompact g = (ICompact)graph;
 
 		/*
 		int idx= g.getNodeIdx(new GraphId("author", standingUser));
@@ -164,13 +160,12 @@ public class ModelBasedSearch extends Search {
 
 	protected void buildQuery() {
 		logger.debug("  <<< usingHistory >>>  ="+usingHistory);
-
-		this.queryParams = "usingHistory="+usingHistory+",";
+		this.queryParams = "usingHistory="+usingHistory+",standingUser="+standingUser+",";
 		super.buildQuery();
 	}
 	protected WeightedTextGraph doQuery(String query) {
 
-		if (graph==null) {
+		if (igraph==null) {
 			this.addActionError("The current graph doesn't support Model-Based Search. Talk to Katie or Ni about that.");
 			return null;
 		}
@@ -179,9 +174,9 @@ public class ModelBasedSearch extends Search {
 		
 		
 		logger.debug("Extracting initial distributions...");
-		ICompact g = (ICompact)graph;	
+//		ICompact igraph = (ICompact)graph;	
 
-		int idx= g.getNodeIdx(new GraphId("author", standingUser));
+		int idx= igraph.getNodeIdx(new GraphId("author", standingUser));
 		if (idx==-1) {
 			logger.debug("no user found for '"+standingUser+"'");
 			return null;
@@ -199,13 +194,13 @@ public class ModelBasedSearch extends Search {
 		}
 		else{
 			if (this.usingHistory){
-				String fd=NiesConfig.getProperty(ReadingHistory.READING_HISTORY_DIRECTORY_PROP);
+				String fd=NiesConfig.getProperty(Profile.READING_HISTORY_DIRECTORY_PROP);
 				File fp = new File(fd,user.getUsername());
 				VectorS vsHistory =VectorS.fromFile(fp.getPath());
 				logger.debug("usingHistory of "+user.getUsername()
 						+" #pmids="+vsHistory.size());
 				//logger.debug(vsHistoryPMID);
-				CompactGraph cg= (CompactGraph)graph;
+//				CompactGraph cg= (CompactGraph)graph;
 				//cg.AddExtraLinks("Read"	,"author", standingUser
 					//,"paper", vsHistory.toArray());
 			}
@@ -239,10 +234,10 @@ public class ModelBasedSearch extends Search {
 						,printReasons(e.getKey(), m));
 
 				String pmid=getPMIDfromNodeName( 
-					((CompactGraph)graph).getNodeName(e.getKey()));
+					igraph.getNodeName(e.getKey())); 
 
 				qc.mExplanations.put(pmid, exp);
-				//logger.debug("explanation of "+pmid +": "+exp);
+				logger.debug("explanation of "+pmid +": "+exp);
 
 			}
 
@@ -256,9 +251,9 @@ public class ModelBasedSearch extends Search {
 
 		mCacheExplanations=qc.mExplanations;//point to the Exp cache of the current query
 
-		Distribution d=new CompactImmutableArrayDistribution(qc.rlt, (ICompact)graph);
+		Distribution d=new CompactImmutableArrayDistribution(qc.rlt, igraph);
 
-		//logger.debug("doQuery(): d="+d.toMapID());
+		logger.debug("doQuery(): d="+d.toMapID());
 		//SetI miWord= g.getNodeIdx("word", query.split(" "));
 
 

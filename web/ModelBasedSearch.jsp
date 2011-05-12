@@ -1,39 +1,38 @@
 <%@ taglib prefix="s" uri="/struts-tags" %><%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" prefix="ajax"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <html>
 <head>
   <title>NIES</title>
+  <tiles:insertTemplate template="/head.jsp" flush="true"/>
   <s:head/>
 </head>
 <body>
 
 <s:action name="Header" executeResult="true"/>
 
-<center><img src="images/nies-logo.gif"/>
+<center>
+<img src="images/nies-logo.gif"/>
 <div style="margin-top:2em">
-<%@ taglib prefix="s" uri="/struts-tags" %><%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" prefix="ajax"%>
-  <script type="text/javascript" src="ajaxtags/js/prototype.js"></script>
-  <script type="text/javascript" src="ajaxtags/js/scriptaculous/scriptaculous.js"></script>
-  <script type="text/javascript" src="ajaxtags/js/overlibmws/overlibmws.js"></script>
-  <script type="text/javascript" src="ajaxtags/js/ajaxtags.js"></script>
-  <link rel="stylesheet" type="text/css" href="ajaxtags/css/ajaxtags.css" />
-  <link rel="stylesheet" type="text/css" href="ajaxtags/css/displaytag.css" />
-  <link rel="stylesheet" href="css/nies.css" type="text/css"/>
-  <style>
-  .magic {overflow:auto}
-  </style>
 
 <form action="ModelBasedSearch.action" method="get" id="Search" name="Search">
 <input type="hidden" name="maxResults" id="maxResults" value="<s:property value="maxResults"/>"/>
 <input type="hidden" name="rf"         id="rf"         value="<s:property value="rf"/>"/>
-<input type="hidden" name="model"         id="model"         value="<s:property value="model"/>"/>
+<input type="hidden" name="model"      id="model"      value="<s:property value="model"/>"/>
+<!-- <input type="hidden" name="standingUser" id="standingUser" value="<s:property value="user.publishAs"/>"/> -->
+
 
 <table style="font-size:100%">
-
-  <tr><td><label for="standingUser" class="label" >User:</label></td>
-  <td><input id="standingUser"  class="text" name="standingUser" type="text" VALUE="Woolford_JL" /> </td>
-  <span id="indicator_user"   style="display:none;">
-  <img src="images/indicator.gif" /></span></td></tr>
+  <!-- Standing User -->
+  <tr>
+    <td>Currently searching near <s:property value="user.publishAs"/>.</td>
+  <tr>
+  	<td><label for="standingUser" class="label" >Search near a different author:</label></td>
+    <td>
+      <input id="standingUser"  class="text" name="standingUser" type="text" VALUE="<s:property value="user.publishAs"/>" />
+	  <span id="indicator_user"   style="display:none;"><img src="images/indicator.gif" /></span>
+	</td>
+  </tr>
 
 <tr><td></td><td>
 <input type="checkbox" name="usingHistory" value="true" checked="checked" />

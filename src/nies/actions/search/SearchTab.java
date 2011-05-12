@@ -28,7 +28,7 @@ public class SearchTab extends Search {
 		}
 		
 		int page    = pages[selectedtab_i];
-		tab = Tab.makeTab(nodetypes[selectedtab_i], nodenames[selectedtab_i]);
+		tab = Tab.makeTab(this.tabconfigs[selectedtab_i], graph);
 		NodeFilter filter = tab.getFilter();
 		Distribution these = allResults;
 		if (filter != null) these = filter.filter(this.graph, allResults);

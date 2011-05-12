@@ -13,11 +13,22 @@
 <s:action name="Header" executeResult="true"/>
 
 <h2>Login</h2>
+
+<div style="float:left; padding: 1em;">
 <s:actionmessage/>
 <s:form action="Login">
 <s:textfield key="username"/>
 <s:password key="password"/>
 <s:submit/>
 </s:form>
+</div>
+
+<div style="margin-left:23em; width:20em; padding: 1em; border-left: 2pt solid #bbb; background:#ddd">
+Member List:
+<ul><s:iterator value="users">
+<li><a href="<s:url action="Profile_view"><s:param name="u" value="top"/></s:url>"><s:property/></a></li>
+</s:iterator></ul>
+</div>
+
 </body>
 </html>

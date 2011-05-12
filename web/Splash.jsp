@@ -2,17 +2,17 @@
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <html>
 <head>
-  <title>NIES</title>
+  <title>Querendipity</title>
 <tiles:insertTemplate template="/head.jsp" flush="true"/>
 </head>
 <body class="nihilo">
 <s:action name="Header" executeResult="true"/>
 
-<center><img src="images/nies-logo.gif"/></center>
-<p>Welcome to the Network Information Extraction System (NIES)! 
+<center><img src="images/logo-big.png" style="margin:3em 0 4em 0"/></center>
+<p>Welcome to Querendipity! 
 This app demonstrates how graph-based models can be used to improve the performance 
 of information retrieval systems in contexts which have traditionally been dominated by methods
-requiring domain knowledge.  NIES pulls data from places like PubMed, SGD, and FlyBase, and integrates them in the 
+requiring domain knowledge.  Querendipity pulls data from places like PubMed, SGD, and FlyBase, and integrates them in the 
 first draft of a context-free search system designed to serve genetics researchers.<p>
 
 <p>If you would like to use this search system and help our research (as machine learning and information

@@ -72,6 +72,7 @@ public class AuthenticationInterceptor implements Interceptor {
 		
 		String username  = (String) session.get( nies.actions.Constants.USER );
 		String token     = (String) session.get( nies.actions.Constants.USERTOKEN);
+		logger.debug("Authenticating user "+username+" with token "+token);
 		User user        = adc.authenticateUser(username, token);
 		/* 
 		 * If user doesn't exist return the LOGIN control string.  This will cause the 
@@ -83,6 +84,7 @@ public class AuthenticationInterceptor implements Interceptor {
 			String oldActionName = actionInvocation.getInvocationContext().getName();
 			if (!oldActionName.startsWith("Login") &&
 				!oldActionName.equals("Header")) session.put(nies.actions.Constants.LASTACTION, oldActionName);
+			else session.put(nies.actions.Constants.LASTACTION, "Splash");
 		    return this.concludeUnauthenticated(actionInvocation);
 		} 
 		

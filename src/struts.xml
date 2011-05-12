@@ -22,7 +22,9 @@
         
         <global-results>
             <result name="error">/Error.jsp</result>
-            <result name="login">/Login.jsp</result>
+            <result name="login" type="redirectAction">
+            	<param name="actionName">LoginForm</param>
+            </result>
         </global-results>
         
         <global-exception-mappings>
@@ -33,8 +35,8 @@
      <package name="nies-secure" extends="nies">
      	<default-interceptor-ref name="secureStack"/>
      	
-     	<action name="ReadingHistory_*" class="nies.actions.ReadingHistory" method="{1}">
-     		<result>/ReadingHistory.jsp</result>
+     	<action name="Profile_*" class="nies.actions.Profile" method="{1}">
+     		<result>/Profile.jsp</result>
      	</action>
      	
      	<action name="PositiveResults" class="nies.actions.PositiveDocuments">
@@ -124,12 +126,11 @@
         <action name="ModelBasedSearchPage" class="nies.actions.search.ModelBasedSearchForm">
         	<result>/ModelBasedSearch.jsp</result>
         </action>
+        
         <action name="ModelBasedSearch" class="nies.actions.search.ModelBasedSearch">
-        	<result name="success">/ModelBasedResults.jsp</result>
+        	<result name="success">/Results.jsp</result>
         	<result name="input" type="redirectAction">ModelBasedSearchPage</result>
         </action>
-        
-        
         
         <action name="Go" class="nies.actions.Go">
         	<result>/Go.jsp</result>
@@ -157,7 +158,7 @@
         	<result type="redirectAction">Splash</result>
         </action>
         
-        <action name="LoginForm" class="nies.actions.NiesSupport">
+        <action name="LoginForm" class="nies.actions.Login">
         	<result>/Login.jsp</result>
         </action>
         

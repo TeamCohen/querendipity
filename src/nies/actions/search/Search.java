@@ -1,6 +1,7 @@
 package nies.actions.search;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,6 +16,7 @@ import nies.data.Query;
 import nies.data.QueryData;
 import nies.data.RelevanceView;
 import nies.data.User;
+import nies.exceptions.BadConfigurationError;
 import nies.metadata.PaperCollection;
 import nies.metadata.NiesConfig;
 import nies.ui.Result;
@@ -34,6 +36,7 @@ import org.apache.struts2.util.ServletContextAware;
 import javax.servlet.ServletContext;
 import org.apache.log4j.Logger;
 
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.Preparable;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 import com.sleepycat.je.DatabaseException;
@@ -77,12 +80,13 @@ import com.sleepycat.je.DatabaseException;
  * @author katie
  * */
 public class Search extends SearchForm implements Preparable, ServletContextAware, UserAware {
-	public static final String NIES_TABS_PROP = "nies.tabs";
-	public static final String NIES_TABTYPES_PROP = "nies.tabtypes";
+	//public static final String NIES_TABS_PROP = "nies.tabs";
+//	public static final String NIES_TABTYPES_PROP = "nies.tabtypes";
 	private static final Logger logger = Logger.getLogger(Search.class);
-	protected static final String ALLTAB_TITLE = "Other";
+//	protected static final String ALLTAB_TITLE = "Other";
 	private static final Class WALKER_CLASS = ghirl.graph.BasicWalker.class;
 	public static final float DEFAULT_TAB_TIMEOUT_S = 5;
+	private static final String NIES_TABLIST = "nies.searcher.%s.tabs";
 	
 	protected static Map<User,QueryCache> queryCache = new TreeMap<User,QueryCache>();
 	
@@ -110,9 +114,10 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 	protected String stopEdges;
 	protected boolean usingStopEdges;
 	
-	protected String[] nodenames;
-	protected String[] nodetypes;
-	protected int[] pages;
+	protected String[] tabconfigs;
+//	protected String[] nodenames;
+//	protected String[] nodetypes;
+	protected int[] pages = {};
 	
 	protected String pagestring;
 	protected int pagechangetab=-1, pagechangepage;
@@ -126,10 +131,10 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 	
 	/* Beans methods (getters and setters) */
 
-	public String[] getNodenames() { return nodenames; }
-	public String[] getNodetypes() { return nodetypes; }
-	public void setNodenames(String[] nodenames) { this.nodenames = nodenames; }
-	public void setNodetypes(String[] nodetypes) { this.nodetypes = nodetypes; }
+//	public String[] getNodenames() { return nodenames; }
+//	public String[] getNodetypes() { return nodetypes; }
+//	public void setNodenames(String[] nodenames) { this.nodenames = nodenames; }
+//	public void setNodetypes(String[] nodetypes) { this.nodetypes = nodetypes; }
 	public void setNUMSTEPS(int numsteps) { NUMSTEPS = numsteps; }
 	public int getNUMSTEPS() { return NUMSTEPS; }
 
@@ -141,7 +146,7 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		pagestring = pagelist;
 		String[] pp = pagelist.split(",");
 		for (int i=0; i<Math.min(pp.length, pages.length); i++) {
-			pages[i]=makePositiveInt(pp[i], nodenames[i]);
+			pages[i]=makePositiveInt(pp[i], tabconfigs[i]);
 		}
 		if (pagechangetab >= 0 && pagechangetab < pages.length) 
 			pages[pagechangetab] = pagechangepage;
@@ -192,20 +197,31 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 	
 	/** (Struts method) Configure tabs and pages. Called before parameters are set in Interceptor phase. */
 	public void prepare() {
-		hasAllTab = Boolean.parseBoolean(nies.metadata.NiesConfig.getProperty("nies.allTab","false"));
-		nodetypes = (NiesConfig.getProperty(NIES_TABTYPES_PROP,"")+(hasAllTab ? ",tab" : "")).split(",");
-		nodenames = (NiesConfig.getProperty(NIES_TABS_PROP,"")+(hasAllTab ? ","+ALLTAB_TITLE : "")).split(",");
-		if (nodetypes.length != nodenames.length) {
-			logger.error("Bad tab configuration:\n\ttabtypes:" 
-					+NiesConfig.getProperty(NIES_TABTYPES_PROP)
-					+"\n\ttabs:"
-					+NiesConfig.getProperty(NIES_TABS_PROP));
-			throw new IllegalStateException("nies.properties must include tabtypes and tabs or neither");
+		this.prepare(ActionContext.getContext().getActionInvocation().getInvocationContext().getName());
+	}
+	public void prepare(String name) {
+		logger.debug("Preparing Search");
+		String tabconfiglist = NiesConfig.getProperty(String.format(NIES_TABLIST,name));
+		if (tabconfiglist == null)
+			throw new BadConfigurationError("Not configured to prepare tablist for "+name+"; please provide "+String.format(NIES_TABLIST,name));
+		tabconfigs = tabconfiglist.split(",");
+		logger.debug(name+" configured with "+tabconfigs.length+" tabs.");
+		
+//		nodetypes = (NiesConfig.getProperty(NIES_TABTYPES_PROP,"")+(hasAllTab ? ",tab" : "")).split(",");
+//		nodenames = (NiesConfig.getProperty(NIES_TABS_PROP,"")+(hasAllTab ? ","+ALLTAB_TITLE : "")).split(",");
+//		if (nodetypes.length != nodenames.length) {
+//			logger.error("Bad tab configuration:\n\ttabtypes:" 
+//					+NiesConfig.getProperty(NIES_TABTYPES_PROP)
+//					+"\n\ttabs:"
+//					+NiesConfig.getProperty(NIES_TABS_PROP));
+//			throw new IllegalStateException("nies.properties must include tabtypes and tabs or neither");
+//		}
+		if (logger.isInfoEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			for (String s : tabconfigs) sb.append(",").append(s);
+			logger.info("Initialized Search display with "+tabconfigs.length+" tabs: "+sb.substring(1));
 		}
-		logger.info("Initialized Search display with "+nodetypes.length+" tabs: "
-				+NiesConfig.getProperty(NIES_TABTYPES_PROP,"")+" () "
-				+NiesConfig.getProperty(NIES_TABS_PROP,""));
-		pages = new int[nodenames.length];
+		pages = new int[tabconfigs.length];
 		pagestring = ""; String delim = "";
 		for (int i=0; i<pages.length; i++) {
 			pages[i]=1;
@@ -244,7 +260,7 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		long startTime = System.currentTimeMillis();
 		long queryTime;
 
-		QueryCache qc = queryCache.get(this.user);
+		QueryCache qc = this.user != null ? queryCache.get(this.user) : null;
 		
 		logger.debug("  Query="+query);
 
@@ -381,11 +397,14 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 	}
 	
 	protected Distribution getInitialDistribution(String query) {
-		Distribution textDist = null;
-		if (graph instanceof TextGraphExtensions) 
-			textDist = ((TextGraphExtensions) graph).textQuery(filterForTextQuery(query));
-		if (textDist != null) if (logger.isDebugEnabled()) logger.debug(textDist.size()+" nodes from text query");
-		else if (logger.isDebugEnabled()) logger.debug("No nodes from text query");
+		Distribution totalDistribution = new TreeDistribution();
+		if (graph instanceof TextGraphExtensions) {
+			Distribution textDist = ((TextGraphExtensions) graph).textQuery(filterForTextQuery(query));
+			if (textDist != null) {
+				if (logger.isDebugEnabled()) logger.debug(textDist.size()+" nodes from text query");
+				totalDistribution.addAll(textDist.getTotalWeight(), textDist);
+			} else if (logger.isDebugEnabled()) logger.debug("No nodes from text query");
+		}
 		
 		String nodeQuery = filterForIdQuery(graph, query);
 		queryDistribution = null;
@@ -394,12 +413,10 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		
 		if (queryDistribution != null) {
 			if (logger.isDebugEnabled()) logger.debug(queryDistribution.size()+" nodes from node query");
-			textDist.addAll(queryDistribution.getTotalWeight(), queryDistribution);
-		} else {
-			if (logger.isDebugEnabled()) logger.debug("No nodes from node query");
-			textDist = queryDistribution;
-		}
-		return textDist;
+			totalDistribution.addAll(queryDistribution.getTotalWeight(), queryDistribution);
+		} else if (logger.isDebugEnabled()) logger.debug("No nodes from node query");
+
+		return totalDistribution;
 	}
 	
 
@@ -452,12 +469,17 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		// TODO: make tabs Comparable so we can switch to TreeMap
 		Map<Tab,Distribution> tabDistributions = new HashMap<Tab,Distribution>();
 		Map<Tab,Integer> paginationCounts = new HashMap<Tab,Integer>();
-		for (int i=0; i<nodetypes.length; i++) {
-			Tab tab = Tab.makeTab(nodetypes[i],nodenames[i],graph);
-			tab.setPage(pages[i]);
-			paginationCounts.put(tab,1 - ((pages[i]-1) * maxResults));
-			tabs.add(tab);
-			tabDistributions.put(tab, new TreeDistribution());
+		for (int i=0; i<tabconfigs.length; i++) {
+			try {
+				Tab tab = Tab.makeTab(tabconfigs[i],graph);
+				tab.setPage(pages[i]);
+				paginationCounts.put(tab,1 - ((pages[i]-1) * maxResults));
+				tabs.add(tab);
+				tabDistributions.put(tab, new TreeDistribution());
+			} catch (BadConfigurationError e) {
+				addActionError("Trying to configure tab "+i+" of {"+join(", ",tabconfigs)+"}");
+				throw(e);
+			}
 		}
 		long tabulateConstruct = System.currentTimeMillis();
 		if (logger.isDebugEnabled()) logger.debug(" *** Constructed tabs: "+((double)tabulateConstruct - (double)tabulateStart)/1000);
@@ -530,39 +552,39 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		if (logger.isDebugEnabled()) logger.debug(" *** Display data collection: "+((double)end-(double)filterSort)/1000);
 	}
 	
-	protected void oldtabulateResults(Distribution allResults) {
-		if (logger.isDebugEnabled()) logger.debug("Tabulating results...");
-		boolean defaultYet = (this.selectedTab != null);
-		RelevanceView rview = controller.getRview();
-		if (logger.isDebugEnabled()) logger.debug("Tab selection is "+ (!defaultYet ? "NOT" : "") + " already set.");
-		for (int i=0; i<nodetypes.length; i++) {
-			long tabStart = System.currentTimeMillis();
-			if (logger.isDebugEnabled()) logger.debug("*** Stamp: "+tabStart);
-			int page    = pages[i];
-			Tab tab = Tab.makeTab(nodetypes[i], nodenames[i],graph);
-			long tabConstruct = System.currentTimeMillis();
-			if (logger.isDebugEnabled()) logger.debug("*** Tab construction: "+((double)tabConstruct-(double)tabStart)/1000);
-			fillTab(tab,allResults,page,rview);
-			long tabFill = System.currentTimeMillis();
-			if (logger.isDebugEnabled()) logger.debug("*** Tab fill: "+((double)tabFill-(double)tabConstruct)/1000);
-			if (!defaultYet && tab.nresults > 0) {
-				this.selectedTab = nodenames[i];
-				defaultYet = true;
-			}
-			this.tabs.add(tab);
-			this.nresults += tab.nresults;
-			long tabEnd = System.currentTimeMillis();
-			if (logger.isDebugEnabled()) logger.debug("*** Total tab: "+((double)tabEnd-(double)tabStart)/1000);
-		}
-		
-//		if (hasAllTab) {
-//			Tab tab = Tab.makeTab("tab",ALLTAB_TITLE);
-//			tab.init(this.graphResults.getNodeDist(), pages[pages.length-1], 3*this.maxResults, this.paperCollection);
+//	protected void oldtabulateResults(Distribution allResults) {
+//		if (logger.isDebugEnabled()) logger.debug("Tabulating results...");
+//		boolean defaultYet = (this.selectedTab != null);
+//		RelevanceView rview = controller.getRview();
+//		if (logger.isDebugEnabled()) logger.debug("Tab selection is "+ (!defaultYet ? "NOT" : "") + " already set.");
+//		for (int i=0; i<nodetypes.length; i++) {
+//			long tabStart = System.currentTimeMillis();
+//			if (logger.isDebugEnabled()) logger.debug("*** Stamp: "+tabStart);
+//			int page    = pages[i];
+//			Tab tab = Tab.makeTab(nodetypes[i], nodenames[i],graph);
+//			long tabConstruct = System.currentTimeMillis();
+//			if (logger.isDebugEnabled()) logger.debug("*** Tab construction: "+((double)tabConstruct-(double)tabStart)/1000);
+//			fillTab(tab,allResults,page,rview);
+//			long tabFill = System.currentTimeMillis();
+//			if (logger.isDebugEnabled()) logger.debug("*** Tab fill: "+((double)tabFill-(double)tabConstruct)/1000);
+//			if (!defaultYet && tab.nresults > 0) {
+//				this.selectedTab = nodenames[i];
+//				defaultYet = true;
+//			}
 //			this.tabs.add(tab);
+//			this.nresults += tab.nresults;
+//			long tabEnd = System.currentTimeMillis();
+//			if (logger.isDebugEnabled()) logger.debug("*** Total tab: "+((double)tabEnd-(double)tabStart)/1000);
 //		}
-		
-		if (logger.isDebugEnabled()) logger.debug("Results tabulated.");
-	}
+//		
+////		if (hasAllTab) {
+////			Tab tab = Tab.makeTab("tab",ALLTAB_TITLE);
+////			tab.init(this.graphResults.getNodeDist(), pages[pages.length-1], 3*this.maxResults, this.paperCollection);
+////			this.tabs.add(tab);
+////		}
+//		
+//		if (logger.isDebugEnabled()) logger.debug("Results tabulated.");
+//	}
 	
 	
 	protected void fillTab(Tab tab, Distribution allResults, int page, RelevanceView rview) {
@@ -588,14 +610,15 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 	}
 	
 	public static String join(String delim, String ... sequence) {
+		if (sequence==null || sequence.length ==0) return "";
 		StringBuilder sb = new StringBuilder();
 		for (String term : sequence) {
 			if (term != null) {
-				sb.append(term); 
 				sb.append(delim); 
+				sb.append(term); 
 			}
 		}
-		return sb.substring(0, sb.length()-delim.length());
+		return sb.substring(1);
 	}
 	/**
 	 * @return the graph
@@ -658,12 +681,13 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		this.usingStopEdges = usingStopEdges;
 	}
 	public static String join(String delim, int ... sequence) {
+		if (sequence==null || sequence.length ==0) return "";
 		StringBuilder sb = new StringBuilder();
 		for (int term : sequence) {
-			sb.append(term); 
 			sb.append(delim);
+			sb.append(term); 
 		}
-		return sb.substring(0, sb.length()-delim.length());
+		return sb.substring(1);
 	}
 	public WeightedTextGraph getGraphResults() {
 		return graphResults;
@@ -678,6 +702,10 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 			cachedResults = rd;
 			cachedQueryDistribution = qd;
 		}
+	}
+
+	public User getUser() {
+		return user;
 	}
 	
 }

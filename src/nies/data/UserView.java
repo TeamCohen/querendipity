@@ -38,13 +38,13 @@ public class UserView implements DataView {
 			super(catalog, keyclass, dataclass);
 		}
 		public User entryToObject(String uid, UserData data) {
-			return new User(uid, data.getUsername(), data.getPassHash(), data.getEmail());
+			return new User(uid, data.getUsername(), data.getPassHash(), data.getEmail(), data.isAdmin(), data.getPublishAs(), data.getCurrentToken());
 		}
 		public String objectToKey(User user) {
 			return new String(user.getUid());
 		}
 		public UserData objectToData(User user) {
-			return new UserData(user.getUsername(), user.getPassHash(), user.getEmail());
+			return new UserData(user.getUsername(), user.getPassHash(), user.getEmail(), user.isAdmin(), user.getPublishAs(), user.getCurrentToken());
 		}
 	}
 

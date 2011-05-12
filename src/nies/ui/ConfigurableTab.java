@@ -55,6 +55,12 @@ nies.Papers.Genes=geneIsMentionedInPaperInverse</pre>
 public class ConfigurableTab extends Tab {
 	private static final Logger logger = Logger.getLogger(ConfigurableTab.class);
 	public static final String ATTRIBUTE_NVALUES_PROP="nies.alltabs.attributes.maxvalues";
+	public static final String FILTER_PROP    ="nies.tab.%s.filter",
+	                           LABEL_PROP     ="nies.tab.%s.label",
+	                           NOLABEL_PROP   ="nies.tab.%s.nolabel",
+	                           ATTRIBUTES_PROP="nies.tab.%s.attributes",
+	                           ATTRIBUTE_PROP ="nies.tab.%s.attribute.%s",
+	                           DEREFERENCE_PROP= "nies.tab.%s.dereference";
 	private static final PathSearcher dereferenceSearcher = new PathSearcher("_hasTerm _inFile");
 	private static final PathSearcher foridSearcher = new PathSearcher("vt:hasIdInverse");
 	NodeFilter filter;
@@ -121,11 +127,11 @@ public class ConfigurableTab extends Tab {
 	protected void init(String name, Graph g) {
 		this.title = name;
 		this.displayType=Tab.CONFIGURABLE;
-		String filtername="nies."+this.title+".filter";
+		String filtername=String.format(FILTER_PROP,this.title);//this.title+".filter";
 		if (NiesConfig.getProperty(filtername) == null) {
 			throw new BadConfigurationError("Missing configuration for "+filtername);
 		}
-		logger.debug("Creating configurable tab "+this.title+" with filter "+NiesConfig.getProperty(filtername));
+		if (logger.isDebugEnabled()) logger.debug("Creating configurable tab "+this.title+" with filter "+NiesConfig.getProperty(filtername));
 		this.filter = new NodeFilter(NiesConfig.getProperty(filtername));
 		graph = g; if (graph == null) logger.warn("No graph available. Call ConfigurableTab.setGraph() before processing results.");
 		String labelname="nies."+this.title+".label";
@@ -134,22 +140,28 @@ public class ConfigurableTab extends Tab {
 			this.labelSearcher = new PathSearcher(labelpath);
 			this.labelSearcher.setGraph(graph);
 		}
-		String attrsListName = "nies."+this.title+".attributes";
-		for(String attrName : NiesConfig.getProperty(attrsListName).split(",")) {
-			if ("".equals(attrName)) continue;
-			String path = NiesConfig.getProperty("nies."+this.title+"."+attrName.replaceAll(" ", "_"));
-			if (null == path) {
-				logger.error("Bad config in nies for tab "+this.title+": "+attrName+" has null path");
-				continue;
+		String attrsListName = String.format(ATTRIBUTES_PROP,this.title);
+		String attrsList = NiesConfig.getProperty(attrsListName);
+		if (attrsList == null) {
+			logger.error("Bad config in nies for tab "+this.title+": "+attrsListName+" required");
+		} else {
+			for(String attrName : attrsList.split(",")) {
+				if ("".equals(attrName)) continue;
+				attrName = attrName.replaceAll(" ", "_");
+				String path = NiesConfig.getProperty(String.format(ATTRIBUTE_PROP,this.title,attrName));
+				if (null == path) {
+					logger.error("Bad config in nies for tab "+this.title+": "+attrName+" has null path");
+					continue;
+				}
+				PathSearcher ps = new PathSearcher(path);
+				if (graph != null) ps.setGraph(graph);
+				attrSearchers.add(new Entry<String,PathSearcher>(attrName, ps));
 			}
-			PathSearcher ps = new PathSearcher(path);
-			if (graph != null) ps.setGraph(graph);
-			attrSearchers.add(new Entry<String,PathSearcher>(attrName, ps));
 		}
 		dereferenceById = Boolean.parseBoolean(
-				NiesConfig.getProperty("nies.dereference", String.valueOf(dereferenceById)));
+				NiesConfig.getProperty(String.format(DEREFERENCE_PROP,this.title), String.valueOf(dereferenceById)));
 		logger.info("Dereferencing is "+ (dereferenceById ? "on" : "off"));
-		noLabel = NiesConfig.getProperty("nies."+this.title+".nolabel",null);
+		noLabel = NiesConfig.getProperty(String.format(NOLABEL_PROP, this.title),null);
 		dereferenceSearcher.setGraph(graph);
 		foridSearcher.setGraph(graph);
 		this.maxnvalues_setting = Integer.parseInt(NiesConfig.getProperty(ATTRIBUTE_NVALUES_PROP,"-1"));

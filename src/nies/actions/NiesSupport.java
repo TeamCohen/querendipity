@@ -18,15 +18,15 @@ public class NiesSupport extends ActionSupport {
 	
 	public static final String TAB_TIMEOUT = "nies.tabTimeout";
 	
-	protected String name="NiesSupport";
+//	protected String name="NiesSupport";
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+//	public String getName() {
+//		return name;
+//	}
+//
+//	public void setName(String name) {
+//		this.name = name;
+//	}
 
 	protected int makePositiveInt(String number, String name) { return makeInt(number, name); }
 	protected int makeInt(String number, String name) {

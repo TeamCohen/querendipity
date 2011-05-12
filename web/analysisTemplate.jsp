@@ -24,7 +24,7 @@ dojo.require("dijit.layout.StackContainer");
 
 <!-- Search Bar -->
 <div>
-<img src="images/nies-logo.gif" style="width:15em; float:left"/>
+<img src="images/logo-generic.png" style="width:15em; float:left"/>
 <div style="float:left; margin-left:1.5em;  padding: 0.5em; margin-bottom:0">
 <tiles:insertTemplate template="/SearchFormOnly.jsp" flush="true"/>
 </div>

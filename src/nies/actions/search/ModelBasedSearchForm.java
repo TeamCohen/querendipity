@@ -28,5 +28,6 @@ public class ModelBasedSearchForm extends ModelBasedSearch {
 		return model;
 	}
 	
-
+	public void prepare() {}
+	
 }

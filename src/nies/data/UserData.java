@@ -13,17 +13,15 @@ import org.apache.commons.codec.binary.Base64;
 public class UserData implements Serializable {
 	private static final long serialVersionUID = -8592928875681661490L;
 	private static final Logger logger = Logger.getLogger(UserData.class);
-	private String username, passHash, email;
+	private String username, passHash, email, publishAs;
+	private String currentToken; // nuked 28 apr 2011, but leaving field so existing databases stay valid
 	private boolean isAdmin=false;
-	private String currentToken;
-	public UserData(String username, String passHash, String email) {
-		this(username, passHash, email, false, "");
-	}
-	public UserData(String username, String passHash, String email, boolean isAdmin, String currentToken) {
+	public UserData(String username, String passHash, String email, boolean isAdmin, String publishAs, String currentToken) {
 		this.username = username;
 		this.passHash = passHash;
 		this.email    = email;
 		this.isAdmin  = isAdmin;
+		this.publishAs=publishAs;
 		this.currentToken=currentToken;
 	}
 	public String getUsername() {
@@ -38,14 +36,14 @@ public class UserData implements Serializable {
 	public boolean isAdmin() {
 		return isAdmin;
 	}
-	public String getCurrentToken() {
-		return currentToken;
+	public String getPublishAs() {
+		return publishAs;
 	}
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
-	public void setCurrentToken(String currentToken) {
-		this.currentToken = currentToken;
+	public void setPublishAs(String p) {
+		this.publishAs = p;
 	}
 	public void setUsername(String username) {
 		this.username = username;
@@ -80,5 +78,11 @@ public class UserData implements Serializable {
 		} catch(NumberFormatException e) { 
 			logger.error("Can't initialize primary key generator with found key \""+last+"\"",e); 
 		}
+	}
+	public String getCurrentToken() {
+		return currentToken;
+	}
+	public void setCurrentToken(String currentToken) {
+		this.currentToken = currentToken;
 	}
 }

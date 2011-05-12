@@ -13,16 +13,16 @@ public class LazySearch extends Search {
 		logger.debug("Tabulating results...");
 		boolean defaultYet = (this.selectedTab != null);
 		logger.debug("Tab selection is "+ (!defaultYet ? "NOT" : "") + " already set.");
-		for (int i=0; i<nodetypes.length; i++) {
+		for (int i=0; i<tabconfigs.length; i++) {
 			int page    = pages[i];
-			Tab tab = Tab.makeTab(nodetypes[i], nodenames[i]);
+			Tab tab = Tab.makeTab(tabconfigs[i], graph);
 			NodeFilter filter = tab.getFilter();//new NodeFilter("isa=$"+type);
 			Distribution these = allResults;
 			if (filter != null) these = filter.filter(this.graph, allResults);
 //			tab.init(these, page, this.maxResults, this.paperCollection);
 			tab.nresults = these.size();
 			if (!defaultYet && tab.nresults > 0) {
-				this.selectedTab = nodenames[i];
+				this.selectedTab = tab.getTitle();
 				defaultYet = true;
 			}
 			
