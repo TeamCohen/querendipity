@@ -84,7 +84,7 @@ public class AuthenticationInterceptor implements Interceptor {
 			String oldActionName = actionInvocation.getInvocationContext().getName();
 			if (!oldActionName.startsWith("Login") &&
 				!oldActionName.equals("Header")) session.put(nies.actions.Constants.LASTACTION, oldActionName);
-			else session.put(nies.actions.Constants.LASTACTION, "Splash");
+			else session.put(nies.actions.Constants.LASTACTION, "");
 		    return this.concludeUnauthenticated(actionInvocation);
 		} 
 		

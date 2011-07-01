@@ -11,10 +11,12 @@ var toggleAdminLinks = function () {
 		elt.show();
 	}
 }
-var baseURL = "<s:url action="SearchPage"><s:param name="rf" value="true"/></s:url>&searchAction=";
+var urls = {'EnterQuery':'<s:url action="EnterQuery"><s:param name="rf" value="true"/></s:url>',
+            'ModelBasedSearchPage':'<s:url action="ModelBasedSearchPage"><s:param name="rf" value="true"/></s:url>'}
 var doSearch = function () {
-	var fullURL = baseURL + $("searchselector").value;
-	location.href = fullURL;
+	var option = $("searchselector").value.split(":");
+	var to = urls[option[0]] + (option[1] != undefined ? option[1] : "");
+	location.href = to;
 }
 var gotoSelectedUrl = function(selector) {
 	if (selector.value != "") { location.href = selector.value; }
@@ -24,13 +26,16 @@ var gotoSelectedUrl = function(selector) {
 <div id="header" class="colorB">
 	<div style="float:left">
 		<a href="<s:url value="/"/>">Home</a>
-			| <a href="<s:url action="ModelBasedSearchPage"><s:param name="rf" value="true"/></s:url>">Model-Based Search</a>
+			| <a href="<s:url action="EnterQuery"><s:param name="rf" value="true"/><s:param name="searchform" value="Dispatch"/></s:url>">Search Dispatch</a>
+			<s:if test="ghirlProperties['pra.model'] != ''">| <a href="<s:url action="ModelBasedSearchPage"><s:param name="rf" value="true"/></s:url>">Model-Based Search</a></s:if>
 			| <select id="searchselector" onChange="doSearch();">
-				<option value="none" SELECTED>Select search function...</option>
-				<option value="Search">Search</option>
-				<option value="MergedSearch">Merged Search</option>
-				<option value="Search-lazy">Lazy Search</option>
-				<option value="Search-laziest">Laziest Search</option>
+				<option value="none" SELECTED>All search types...</option>
+				<option value="EnterQuery:&searchform=Dispatch">Search Dispatch (default)</option>
+				<option value="ModelBasedSearchPage"<s:if test="ghirlConfig['pra.model'] == null"> disabled="disabled"</s:if>>Model-Based Search</option>
+				<option value="EnterQuery:&searchform=Basic&searchAction=Search">Search</option>
+				<option value="EnterQuery:&searchform=Basic&searchAction=MergedSearch">Merged Search</option>
+				<option value="EnterQuery:&searchform=Basic&searchAction=Search-lazy">Lazy Search</option>
+				<option value="EnterQuery:&searchform=Basic&searchAction=Search-laziest">Laziest Search</option>
 			</select>
 			<s:if test="%{loggedIn}"><!-- if we're logged in: -->
 			| <a onclick="toggleAdminLinks();">Toggle Admin</a>
@@ -50,8 +55,8 @@ var gotoSelectedUrl = function(selector) {
 					</s:url>">Account</a> 
 			| <select id="userinfoselector" onChange="gotoSelectedUrl(this);">
 				<option value="">My Info...</option>
-				<option value="<s:url action="Profile_view"/>">Profile</option>
-				<option value="<s:url action="PositiveResults"/>">Starred Documents</option>
+				<option value="<s:url action="Profile_view"/>"<s:if test="niesConfig['nies.readinghistory'] == null"> disabled="disabled"</s:if>>Profile</option>
+				<option value="<s:url action="PositiveResults"/>"<s:if test="niesConfig['nies.positivedocuments.tab'] == null"> disabled="disabled"</s:if>>Starred Documents</option>
 			</select> 
 			| <a href="<s:url action="Logout"/>">Log Out</a>
 		</s:if><!-- end second logged-in section -->

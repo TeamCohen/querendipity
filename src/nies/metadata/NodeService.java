@@ -55,9 +55,10 @@ public class NodeService {
   }
 
 
-  public List getByName(String name, boolean MATCH_ANYWHERE, boolean CASE_MATTERS) {
+  public List<Node> getByName(String name, boolean MATCH_ANYWHERE, boolean CASE_MATTERS) {
     if (!CASE_MATTERS) name = name.toLowerCase();
-    List   l = new ArrayList();
+    List<Node>   l = new ArrayList<Node>();
+    name = name.replace("*", "");
     String nodename;
     int    loc;
     for (Node node : nodes) {

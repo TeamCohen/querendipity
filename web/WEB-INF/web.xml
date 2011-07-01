@@ -24,23 +24,21 @@
     <servlet-class>nies.metadata.AutocompleteServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>autocomplete</servlet-name>
     <url-pattern>/autocomplete.view</url-pattern>
   </servlet-mapping>
 
-	
   <servlet>
     <servlet-name>ajaxstrings</servlet-name>
     <servlet-class>nies.metadata.AjaxStringServlet</servlet-class>
     <load-on-startup>3</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>ajaxstrings</servlet-name>
     <url-pattern>/ajaxstrings.view</url-pattern>
   </servlet-mapping>
+  
 <!-- /NIES -->
 <!-- AjaxTags: -->
 
@@ -52,21 +50,18 @@
       <param-value>/ajaxtags</param-value>
     </init-param>
   </servlet>
-
-    <servlet-mapping>
-        <servlet-name>sourceloader</servlet-name>
-        <url-pattern>/ajaxtags/js/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>sourceloader</servlet-name>
-        <url-pattern>/img/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>sourceloader</servlet-name>
-        <url-pattern>/ajaxtags/css/*</url-pattern>
-    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>sourceloader</servlet-name>
+    <url-pattern>/ajaxtags/js/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>sourceloader</servlet-name>
+    <url-pattern>/img/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>sourceloader</servlet-name>
+    <url-pattern>/ajaxtags/css/*</url-pattern>
+  </servlet-mapping>
 <!-- /AjaxTags -->  
 <!-- Struts: -->
   
@@ -82,6 +77,11 @@
   
 <!-- /Struts -->
 <!-- Tiles: -->
+
+    <listener>
+        <listener-class>org.apache.struts2.tiles.StrutsTilesListener</listener-class>
+    </listener>
+
   <filter>
   	<filter-name>Tiles Filter</filter-name>
   	<filter-class>org.apache.tiles.web.startup.TilesFilter</filter-class>

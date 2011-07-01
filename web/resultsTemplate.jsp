@@ -25,9 +25,9 @@ dojo.require("dijit.layout.StackContainer");
 <!-- Search Bar -->
 <div>
 
-<img src="images/logo-generic.png" style="width:15em; float:left"/>
+<img src="images/<s:property value="niesConfig['nies.logo']"/>" style="width:15em; float:left" alt="Querendipity"/>
 <div style="float:left; margin-left:1.5em;  padding: 0.5em; margin-bottom:0.5em" xstyle="border-bottom:1pt solid #dddddd; background:#f6f6fc; border-right:1pt solid #dddddd; border-top:1pt solid #eeeeee; border-left:1pt solid #eeeeee;">
-<tiles:insertTemplate template="/SearchFormOnly.jsp" flush="true"/>
+<tiles:insertAttribute name="form" flush="true"/>
 </div>
 <br style="clear:both"/>
 </div>
@@ -49,5 +49,7 @@ dojo.require("dijit.layout.StackContainer");
  
 <!-- Footer -->
 <s:include value="footer.jsp"/>
+
+<s:debug/>
 </body>
 </html>

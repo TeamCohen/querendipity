@@ -1,9 +1,9 @@
-
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <script type="text/javascript" src="ajaxtags/js/prototype.js"></script>
 <script type="text/javascript" src="ajaxtags/js/scriptaculous/scriptaculous.js"></script>
 <script type="text/javascript" src="ajaxtags/js/overlibmws/overlibmws.js"></script>
 <script type="text/javascript" src="ajaxtags/js/ajaxtags.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js" 
+<script type="text/javascript" src="<s:text name="dojo"/>" 
     djConfig="parseOnLoad: true"></script>
   
 <link rel="stylesheet" type="text/css" href="css/nies.css"/>

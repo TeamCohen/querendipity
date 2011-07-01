@@ -9,6 +9,8 @@ import ghirl.graph.GraphId;
 import ghirl.graph.NodeFilter;
 import ghirl.util.Distribution;
 
+import nies.ui.Result.Link;
+
 import org.apache.log4j.Logger;
 import org.apache.struts2.ServletActionContext;
 
@@ -38,17 +40,17 @@ public class ExploreTab extends Tab {
 		GraphId node = (GraphId) graphid;
 		ExploreResult tabresult = new ExploreResult(v_tabresult);
 		tabresult.setLabel(graph.getTextContent(node));
-		Set<String> all_links = graph.getEdgeLabels(node);
-		for (String link : all_links) {
-			ArrayList<String> values = new ArrayList<String>();
-			Distribution d_values = graph.walk1(node,link);
-			for(Iterator it = d_values.iterator(); it.hasNext();) {
-				values.add(graph.getTextContent((GraphId) it.next()));
+		Set<String> all_edges = graph.getEdgeLabels(node);
+		for (String edge : all_edges) {
+			ArrayList<Link> values = new ArrayList<Link>();
+			Distribution d_values = graph.walk1(node,edge);
+			for(Iterator it = d_values.iterator(); it.hasNext();) { GraphId destNode = (GraphId) it.next();
+				values.add(tabresult.new Link(destNode.toString(), graph.getTextContent(destNode)));
 			}
-			if (link.endsWith("Inverse")) {
-				tabresult.addBackwardAttribute(link, values);
+			if (edge.endsWith("Inverse")) {
+				tabresult.addBackwardAttribute(edge, values);
 			} else {
-				tabresult.addForwardAttribute(link, values);
+				tabresult.addForwardAttribute(edge, values);
 			}
 		}
 		return tabresult;

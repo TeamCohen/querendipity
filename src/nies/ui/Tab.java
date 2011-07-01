@@ -186,7 +186,9 @@ public class Tab extends Transformer {
 	
 
 	public static Tab makeTab(String tabname, Graph graph) {
-		return makeTab(NiesConfig.getProperty(String.format(NIES_TABTYPE_PROP, tabname)),tabname,graph);
+		String tabtype =NiesConfig.getProperty(String.format(NIES_TABTYPE_PROP, tabname));
+		if (tabtype == null) log.warn("No tab type for "+String.format(NIES_TABTYPE_PROP, tabname));
+		return makeTab(tabtype,tabname,graph);
 	}
 	
 	public static Tab makeTab(String tabtype, String tabname) { return makeTab(tabtype,tabname,null); }

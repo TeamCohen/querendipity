@@ -112,6 +112,11 @@
             	 <exclude name="**/package.html"/>
             </fileset>
        </copy>
+       <copy todir="${java.classes}">
+			<fileset dir=".">
+				<include name="*.properties"/>
+			</fileset>
+		</copy>
   </target>
 
 	<target name="clean" depends="init" description="Wipeout all generated files">
@@ -125,12 +130,6 @@
 	<target name="all" depends="clean, compile, war, undeploy, deploy" description="Clean and compile all components"/>
 
 	<target name="war" depends="compile" description="Creates war distribution">
-		<copy todir="${java.classes}">
-			<fileset dir=".">
-				<include name="*.properties"/>
-			</fileset>
-		</copy>
-
 		<zip basedir="${web.src}" destfile="${web.dist}${warfile.name}" whenempty="fail">
 			<include name="**/*.*"/>
 			<include name="*"/>

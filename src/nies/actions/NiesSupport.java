@@ -1,5 +1,11 @@
 package nies.actions;
 
+import ghirl.util.Config;
+
+import java.util.Properties;
+
+import nies.metadata.NiesConfig;
+
 import org.apache.log4j.Logger;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -41,5 +47,7 @@ public class NiesSupport extends ActionSupport {
 		}
 	
 	}
+	public Properties getNiesConfig() { return NiesConfig.getProperties(); }
+	public Properties getGhirlConfig() { return Config.getProperties(); }
 	
 }

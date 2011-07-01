@@ -3,6 +3,16 @@
 function genesBack(pmid) {
 	dijit.byId(pmid+'-genes').back()
 }
+function clk(url) {
+	new Ajax.Request(url, {
+		  method: 'get',
+		  onFailure: function(transport) {
+			  console("couldn't connect!");
+		  },
+		  onSuccess: function(transport) {},
+		  onComplete: function(transport) {}
+		});
+}
 function doFeedback(url, id) {
 	var undo;
 	if (url.match(/promote/)) {

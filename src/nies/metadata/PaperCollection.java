@@ -49,7 +49,7 @@ public class PaperCollection {
 	private void init() {
 		String dir = NiesConfig.getProperty(METADATA_DIRECTORY_PROP); // webappRoot + NiesConfig.getProperty("nies.metadataDirectory");
 		String fn = NiesConfig.getProperty(PAPERCOLLECTION_PROP);
-		init(dir, fn);
+		if (dir != null && fn != null) init(dir, fn);
 	}
 	public void init(String dir,String fn) {
 		log.info("loading PaperCollection="+dir+fn);

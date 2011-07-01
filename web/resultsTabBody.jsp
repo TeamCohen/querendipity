@@ -1,6 +1,7 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <!-- Page list -->
+	<!-- Action: searcher <s:property value="searcher"/> or lastAction <s:property value="#session['lastAction']"/> or context <s:property value="#context[@com.opensymphony.xwork2.ActionContext@ACTION_NAME]"/> -->
 	<!-- Page: <s:property value="page"/> -->
 	<!-- Starti: <s:property value="starti"/> -->
 	<!-- Endi: <s:property value="endi"/> -->
@@ -18,7 +19,7 @@
 	Page 
 	<s:iterator value="#pagelist">
 	<s:if test="#pagelist.current-1 == page"><s:property/></s:if>
-	<s:else><a href="<s:url action="Search" includeParams="get"><s:param name="pagechange" value=""/><s:param name="pages" value="pages"/><s:param name="tab" value="title"/></s:url>&pagechange=<s:property value="#tabstatus.count"/>,<s:property value="#pagelist.current-1"/>"><s:property/></a></s:else>
+	<s:else><a href="<s:url includeParams="all"><s:param name="pagechange" value=""/><s:param name="pages" value="pages"/><s:param name="tab" value="title"/></s:url>&pagechange=<s:property value="#tabstatus.count"/>,<s:property value="#pagelist.current-1"/>"><s:property/></a></s:else>
 	<s:if test="#pagelist.current-1 < #upperBound"> | </s:if>
 	</s:iterator>
 	of <s:property value="npages"/>

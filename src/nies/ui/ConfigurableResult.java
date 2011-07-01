@@ -6,6 +6,7 @@ import java.util.List;
 public class ConfigurableResult extends Result {
 	public static final int PROSE_WORD_LENGTH=4;
 	private List<Entry<String,List<Link>>> attributes=new ArrayList<Entry<String,List<Link>>>();
+	private List<Link> titleLinks = new ArrayList<Link>();
 	
 	public ConfigurableResult() {}
 	public ConfigurableResult(Result vanilla_tabresult) {
@@ -22,6 +23,9 @@ public class ConfigurableResult extends Result {
 		if (values.size() > 0) 
 			ae.setProse(isProse(values.get(0).anchorText) || isProse(values.get(values.size()-1).anchorText));
 	}
+	public List<Link> getTitleLinks() { return titleLinks; }
+	public void addTitleLink(Link link) { titleLinks.add(link); }
+	
 	protected boolean isProse(String value) {
 		// we could use regexes here but we need the performance boost of doing it by hand.
 		int l = value.length();

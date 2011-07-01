@@ -16,19 +16,21 @@ public class TextWalk {
 	public static void main(String args[]) throws Exception {
 		if (args.length < 4) {
 			System.out.println("Usage:\n" +
-					"\t"+TextWalk.class.getCanonicalName()+" -depth d -query word1 word2 word3 ...");
+					"\t"+TextWalk.class.getCanonicalName()+" -depth d -limit N -query word1 word2 word3 ...");
 			return;
 		}
 		int depth=1;
+		int limit=-1;
 		StringBuilder kw = new StringBuilder();
 		for (int i=0; i<args.length; i++) {
 			if (args[i].equals("-depth")) depth = Integer.parseInt(args[++i]);
+			else if (args[i].equals("-limit")) limit = Integer.parseInt(args[++i]);
 			else if (args[i].equals("-query")) kw.append(args[++i]);
 			else kw.append(" ").append(args[i]);
 		}
 		Graph g = Init.makeGraph();
 		Search s = new Search();
-		s.prepare();
+		s.prepare("Search");
 		s.setGraph(g);
 		s.setKeywords(kw.toString());
 		s.setDepth(depth);
@@ -42,6 +44,7 @@ public class TextWalk {
 			if (s.getGraphResults() == null) throw (e);
 		}
 		Distribution results = s.getGraphResults().getNodeDist();
+		if (limit >0) results = results.copyTopN(limit);
 		int i=0;
 		for (Iterator it=results.orderedIterator(); it.hasNext(); i++) {
 			GraphId node = (GraphId) it.next();

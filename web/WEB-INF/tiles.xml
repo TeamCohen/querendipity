@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+ 
+<tiles-definitions>
+  <definition name="Results" template="/resultsTemplate.jsp">
+  	<put-attribute name="tabPane" value="/resultsEagerTabPane.jsp"/>
+  	<put-attribute name="form"    value="/searchformDispatch.jsp"/>
+  </definition>
+  <definition name="Results-lazy" extends="Results">
+  	<put-attribute name="tabPane" value="/resultsLazyTabPane.jsp"/>
+  </definition>
+ 
+  <definition name="SearchBasic" template="/searchTemplate.jsp">
+  	<put-attribute name="form"  value="/searchformBasic.jsp"/>
+  </definition>
+  <definition name="SearchDispatch" template="/searchTemplate.jsp">
+  	<put-attribute name="form" value="/searchformDispatch.jsp"/>
+  </definition>
+</tiles-definitions>

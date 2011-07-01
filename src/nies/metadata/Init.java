@@ -66,7 +66,6 @@ public class Init extends HttpServlet {
 			servletContext.setAttribute("paperCollection", null);
 		}
 
-
 		log.info("loading external Tab configurations...");
 		String[] configFileNames = NiesConfig.getProperty("nies.externalconfig", "").split(",");
 		for (String file : configFileNames) {
@@ -128,7 +127,7 @@ public class Init extends HttpServlet {
 		Graph g;
 		if(GRAPHSTORE_DISK.equals(dbStoreType)) {
 			if(log.isInfoEnabled()) log.info("Building GraphFactory -textgraph "+graphName);
-			g = GraphFactory.makeGraph("-textgraph",graphName,useMutable ? "-a" : "-r");//new TextGraph(graphName);
+			g = GraphFactory.makeGraph("-textgraph",graphName,useMutable ? "-a" : "-r");
 		} 
 		else if(GRAPHSTORE_MEMORY.equals(dbStoreType)) {
 			if(log.isInfoEnabled()) log.info("Building GraphFactory -memorygraph -load nodes.ghirl,edges.ghirl");
@@ -176,16 +175,6 @@ public class Init extends HttpServlet {
 		}else {
 			throw new IllegalStateException("'ghirl.dbStore' had unfamiliar value: '"+dbStoreType+"'. You must specify property 'ghirl.dbStore' to be 'memory' or 'disk'");
 		}
-		
-//		if (useMutable) {
-//			GraphLoader loader = new GraphLoader((MutableGraph) g);
-//			File ghirlDir = new File(dbDir + File.separator + graphName + File.separator + graphName+"_ghirl");
-//			if (!ghirlDir.exists()) {
-//				Logger.getRootLogger().warn("Went looking for load files in "+ghirlDir.getAbsolutePath()+" but couldn't find the directory!");
-//			} else for (String loadFileName : loadList.split(",")) {
-//				loader.load(new File(ghirlDir, loadFileName));
-//			}
-//		}
 		
 		return g;
 	}

@@ -1,11 +1,13 @@
 package nies.actions.search;
 
 import ghirl.graph.GraphId;
+import ghirl.util.Config;
 import ghirl.util.Distribution;
 import ghirl.util.TreeDistribution;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,10 +21,12 @@ import org.apache.log4j.Logger;
 
 
 import nies.actions.search.Search;
+import nies.metadata.NiesConfig;
 import nies.ui.Entry;
 
 public class Display extends Search {
 	private static final Logger logger = Logger.getLogger(Display.class);
+	public static final String CACHED_SEARCHDIR_PROP="nies.searchcache";
 	protected String default_file;
 	protected String file=null;
 	protected Map<GraphId,List<Entry<String,Float>>> reasons;
@@ -35,6 +39,7 @@ public class Display extends Search {
 		queryParams= "";
 		long startTime = System.currentTimeMillis();
 		populateFromFile();
+		if (this.hasActionErrors()) return ERROR;
 		query = makeQuery();
 		tabulateResults(generatedResults);
 		long endTime   = System.currentTimeMillis();
@@ -50,14 +55,27 @@ public class Display extends Search {
 	}
 	
 	/* utility methods */
+	protected BufferedReader findFile() throws FileNotFoundException {
+		String parentDir = NiesConfig.getProperty(CACHED_SEARCHDIR_PROP,"");
+		File f = new File(parentDir,file);
+		if (f.exists()) {
+			return new BufferedReader(new FileReader(f));
+		}
+		logger.info("Looked in "+CACHED_SEARCHDIR_PROP+"="+parentDir+" but couldn't find file "+file+"; trying classloader");
+		InputStream is = Display.class.getClassLoader().getResourceAsStream(file);
+		if (is == null) {
+			this.addActionError(file+" not found in "+CACHED_SEARCHDIR_PROP+" "+parentDir+" or in classloader.");
+			return null;
+		}
+		return new BufferedReader(new InputStreamReader(is));
+	}
 	
 	protected void populateFromFile() throws IOException {
-		InputStream is = Display.class.getClassLoader().getResourceAsStream(file);
-		if (is == null) throw new IllegalArgumentException("Could not get results file "+file+" as input stream from class loader!");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		BufferedReader reader = findFile();
+		if (this.hasActionErrors()) return;
 		generatedResults = new TreeDistribution();
 		for(String line; (line=reader.readLine())!=null;) {
-			logger.debug("Processing '"+line+"'");
+			if (logger.isDebugEnabled()) logger.debug("Processing '"+line+"'");
 			String[] parts = line.split(" ");
 			GraphId node = GraphId.fromString(parts[0]);
 			double weight=1.0;

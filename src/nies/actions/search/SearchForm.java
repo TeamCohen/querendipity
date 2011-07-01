@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 public class SearchForm extends NiesSupport {
 	private static final Logger logger = Logger.getLogger(SearchForm.class);
 	public static final String EXTRA_SEARCH_FIELDS_PROP="nies.extraSearchFields";
-	protected  String name = "SearchForm";
+	public static final String DEFAULT_SEARCHFORM="Dispatch";
 	protected boolean rf=false;
 	protected String authors = "";
 	protected String genes   = "";
@@ -22,6 +22,7 @@ public class SearchForm extends NiesSupport {
 	protected int    maxResults = 10;
 	protected int    depth      = 2;
 	protected String searchAction="";
+	protected String searchform=DEFAULT_SEARCHFORM;
 	protected List<String> extraSearchFields;
 	protected int NUMSTEPS = 1000;
 	
@@ -102,12 +103,15 @@ public class SearchForm extends NiesSupport {
 	public String getSearchAction() {
 		return searchAction;
 	}
-
 	public void setSearchAction(String searchAction) {
 		this.searchAction = searchAction;
 	}
+	public String getSearchform() { return this.searchform; }
+	public void setSearchform(String s) { this.searchform = s; }
 	public void setNUMSTEPS(int numsteps) {
 		NUMSTEPS = numsteps;
 	}
 	public int getNUMSTEPS() { return NUMSTEPS; }
+	public void setDensity(int d) { NUMSTEPS = d; }
+	public int getDensity() { return NUMSTEPS; }
 }

@@ -60,12 +60,16 @@ public class ConfigurableTab extends Tab {
 	                           NOLABEL_PROP   ="nies.tab.%s.nolabel",
 	                           ATTRIBUTES_PROP="nies.tab.%s.attributes",
 	                           ATTRIBUTE_PROP ="nies.tab.%s.attribute.%s",
-	                           DEREFERENCE_PROP= "nies.tab.%s.dereference";
+	                           DEREFERENCE_PROP= "nies.tab.%s.dereference",
+							   LINKS_PROP="nies.tab.%s.links";
 	private static final PathSearcher dereferenceSearcher = new PathSearcher("_hasTerm _inFile");
 	private static final PathSearcher foridSearcher = new PathSearcher("vt:hasIdInverse");
+	private static final String LINK_HREF_PROP = "nies.link.%s";
+	private static final String LINK_TITLE_PROP = "nies.link.%s.title";
 	NodeFilter filter;
 	PathSearcher labelSearcher=null;
 	List<Entry<String,PathSearcher>> attrSearchers=new ArrayList<Entry<String,PathSearcher>>();
+	List<Entry<String,String>> linkFormatters= new ArrayList<Entry<String,String>>();
 	boolean dereferenceById=false;
 	String noLabel=null;
 	public List<Entry<String,PathSearcher>> getAttrSearchers() {
@@ -108,7 +112,7 @@ public class ConfigurableTab extends Tab {
 		dereferenceSearcher.setGraph(graph);
 		foridSearcher.setGraph(graph);
 		for (Entry<String,PathSearcher> e : attrSearchers) {
-			e.value.setGraph(graph);
+			if (e.value != null) e.value.setGraph(graph);
 		}
 		logger.info("Graph set; results may be processed now.");
 	}
@@ -127,6 +131,7 @@ public class ConfigurableTab extends Tab {
 	protected void init(String name, Graph g) {
 		this.title = name;
 		this.displayType=Tab.CONFIGURABLE;
+		// FILTER
 		String filtername=String.format(FILTER_PROP,this.title);//this.title+".filter";
 		if (NiesConfig.getProperty(filtername) == null) {
 			throw new BadConfigurationError("Missing configuration for "+filtername);
@@ -134,12 +139,25 @@ public class ConfigurableTab extends Tab {
 		if (logger.isDebugEnabled()) logger.debug("Creating configurable tab "+this.title+" with filter "+NiesConfig.getProperty(filtername));
 		this.filter = new NodeFilter(NiesConfig.getProperty(filtername));
 		graph = g; if (graph == null) logger.warn("No graph available. Call ConfigurableTab.setGraph() before processing results.");
-		String labelname="nies."+this.title+".label";
-		String labelpath = NiesConfig.getProperty(labelname,"");
+		
+		// LABEL
+		String labelpath = NiesConfig.getProperty(String.format(LABEL_PROP,this.title),"");
 		if (!"".equals(labelpath)) {
 			this.labelSearcher = new PathSearcher(labelpath);
 			this.labelSearcher.setGraph(graph);
+		} else if (logger.isDebugEnabled()) logger.debug("No label path for "+this.title+"; using nodename");
+		
+		// LINKS
+		String links = NiesConfig.getProperty(String.format(LINKS_PROP,this.title),"");
+		if (links != "") {
+			for (String linkname : links.split(",")) {
+				String linkhref = NiesConfig.getProperty(String.format(LINK_HREF_PROP,linkname));
+				String linktitle = NiesConfig.getProperty(String.format(LINK_TITLE_PROP,linkname));
+				this.linkFormatters.add(new Entry<String,String>(linktitle,linkhref));
+			}
 		}
+		
+		// ATTRIBUTES
 		String attrsListName = String.format(ATTRIBUTES_PROP,this.title);
 		String attrsList = NiesConfig.getProperty(attrsListName);
 		if (attrsList == null) {
@@ -153,15 +171,24 @@ public class ConfigurableTab extends Tab {
 					logger.error("Bad config in nies for tab "+this.title+": "+attrName+" has null path");
 					continue;
 				}
-				PathSearcher ps = new PathSearcher(path);
-				if (graph != null) ps.setGraph(graph);
+				PathSearcher ps = null;
+				if (!"".equals(path)) {
+					if (logger.isDebugEnabled()) logger.debug("Creating attribute "+attrName+" with search path "+path);
+					ps = new PathSearcher(path);
+					if (graph != null) ps.setGraph(graph);
+				} else logger.debug("Using null pathsearcher for "+attrName);
 				attrSearchers.add(new Entry<String,PathSearcher>(attrName, ps));
 			}
 		}
+		
+		// DEREFERENCING
 		dereferenceById = Boolean.parseBoolean(
 				NiesConfig.getProperty(String.format(DEREFERENCE_PROP,this.title), String.valueOf(dereferenceById)));
 		logger.info("Dereferencing is "+ (dereferenceById ? "on" : "off"));
+		
+		// MISSING LABELS
 		noLabel = NiesConfig.getProperty(String.format(NOLABEL_PROP, this.title),null);
+		
 		dereferenceSearcher.setGraph(graph);
 		foridSearcher.setGraph(graph);
 		this.maxnvalues_setting = Integer.parseInt(NiesConfig.getProperty(ATTRIBUTE_NVALUES_PROP,"-1"));
@@ -198,13 +225,24 @@ public class ConfigurableTab extends Tab {
 		if (graph == null) throw new IllegalStateException("ConfigurableTab.graph has not been set.");
 		long prStart = System.currentTimeMillis();
 		ConfigurableResult tabresult = new ConfigurableResult(v_tabresult);
-
+		
+		// construct root distribution for this result (optional dereferencing by id)
 		Distribution startFrom = new TreeDistribution((GraphId) result);
 		if (dereferenceById) {
 			startFrom = this.filter.filter(graph, dereference((GraphId) result));
 			logger.info("Dereferenced "+result.toString()+" to include "+(startFrom.size()-1)+" other nodes");
 		}
+		
+		// result label
 		setLabelOnResult((GraphId) result, startFrom, tabresult);
+		
+		// result title link
+		String shortname = ((GraphId) result).getShortName();
+		for (Entry<String,String> linkFormatter : this.linkFormatters) {
+			tabresult.addTitleLink(tabresult.new Link(linkFormatter.getKey(), String.format(linkFormatter.getValue(),shortname)));
+		}
+		
+		// result attributes
 		List<Link> values;
 		long attrStart = System.currentTimeMillis();
 		if (logger.isDebugEnabled()) logger.debug("****** Process Result prologue: "+((double)attrStart - (double)prStart)/1000);
@@ -212,7 +250,9 @@ public class ConfigurableTab extends Tab {
 		for(Entry<String,PathSearcher> attr : attrSearchers) {
 			long searchStart = System.currentTimeMillis();
 			PathSearcher searcher = attr.getValue();
-			Distribution valuedist = searcher.search(startFrom);
+			Distribution valuedist = null;
+			if (searcher != null) valuedist=searcher.search(startFrom);
+			else {logger.debug("Using root node for attribute "+attr.getKey()); valuedist = startFrom; }
 			if (valuedist.size() == 0)
 				logger.debug("No results for "+result.toString()+"->"+attr.getKey());
 			int maxnvalues = Math.min(valuedist.size(), maxnvalues_setting);
@@ -222,7 +262,7 @@ public class ConfigurableTab extends Tab {
 			int nvalues=0;
 			for (GraphId valueid = null; it.hasNext() && nvalues <= maxnvalues; nvalues++) { 
 				valueid=it.next();
-				String s = graph.getTextContent(valueid);
+				String s = graph.getTextContent(valueid).trim();
 				String shortName = valueid.getShortName();
 				if (s == null) values.add(tabresult.new Link(shortName,valueid.toString()));
 				else           values.add(tabresult.new Link(s,valueid.toString()));
