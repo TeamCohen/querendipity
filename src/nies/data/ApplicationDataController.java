@@ -38,6 +38,8 @@ import nies.metadata.NiesConfig;
  *
  */
 public class ApplicationDataController extends HttpServlet {
+	public static final String REL_VIEW = "relView";
+	public static final String USER_VIEW_ATTR = "userView";
 	private static final long   serialVersionUID = -42742755959068770L;
 	private static final Logger logger = Logger.getLogger(ApplicationDataController.class);
 	UserDatabase udb;
@@ -102,8 +104,8 @@ public class ApplicationDataController extends HttpServlet {
 		
 		setupDatabases();
 
-	    if (this.uview != null) servletContext.setAttribute("userView", uview);
-	    if (this.rview != null) servletContext.setAttribute("relView",  rview);
+	    if (this.uview != null) servletContext.setAttribute(USER_VIEW_ATTR, uview);
+	    if (this.rview != null) servletContext.setAttribute(REL_VIEW,  rview);
 	    
 	    servletContext.setAttribute("dataController",   this);
 	}

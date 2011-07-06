@@ -26,13 +26,13 @@ var gotoSelectedUrl = function(selector) {
 <div id="header" class="colorB">
 	<div style="float:left">
 		<a href="<s:url value="/"/>">Home</a>
-			| <a href="<s:url action="EnterQuery"><s:param name="rf" value="true"/><s:param name="searchform" value="Dispatch"/></s:url>">Search Dispatch</a>
+			| <a href="<s:url action="EnterQuery"><s:param name="rf" value="true"/><s:param name="searchform" value="Dispatch"/></s:url>">Search</a>
 			<s:if test="ghirlProperties['pra.model'] != ''">| <a href="<s:url action="ModelBasedSearchPage"><s:param name="rf" value="true"/></s:url>">Model-Based Search</a></s:if>
 			| <select id="searchselector" onChange="doSearch();">
 				<option value="none" SELECTED>All search types...</option>
-				<option value="EnterQuery:&searchform=Dispatch">Search Dispatch (default)</option>
+				<option value="EnterQuery:&searchform=Dispatch">Search(default)</option>
 				<option value="ModelBasedSearchPage"<s:if test="ghirlConfig['pra.model'] == null"> disabled="disabled"</s:if>>Model-Based Search</option>
-				<option value="EnterQuery:&searchform=Basic&searchAction=Search">Search</option>
+				<option value="EnterQuery:&searchform=Basic&searchAction=Search">Advanced Search</option>
 				<option value="EnterQuery:&searchform=Basic&searchAction=MergedSearch">Merged Search</option>
 				<option value="EnterQuery:&searchform=Basic&searchAction=Search-lazy">Lazy Search</option>
 				<option value="EnterQuery:&searchform=Basic&searchAction=Search-laziest">Laziest Search</option>
