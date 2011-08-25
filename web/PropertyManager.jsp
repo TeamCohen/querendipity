@@ -36,7 +36,7 @@
 	<th align="right">Current Value</th>
 	<th>New Value</th>
 	<th align="left">Property</th></tr>
-<!-- iterate over property entries --><s:sort comparator="keysort" source="ghirlProperties.entrySet()"><s:iterator><s:if test="key.startsWith('ghirl')">
+<!-- iterate over property entries --><s:sort comparator="keysort" source="ghirlProperties.entrySet()"><s:iterator><s:if test="key.startsWith('ghirl') || key.startsWith('pra')">
 <tr>
 	<td style="color:gray;text-align:right"><s:property value="value"/></td>
 	<td><input size="40" type="text" name="ghirlProperties['<s:property value="key"/>']" value="<s:property value="value"/>"/></td>

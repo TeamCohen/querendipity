@@ -200,7 +200,7 @@ public class Search extends SearchForm implements Preparable, ServletContextAwar
 		this.prepare(ActionContext.getContext().getActionInvocation().getInvocationContext().getName());
 	}
 	public void prepare(String name) {
-		logger.debug("Preparing Search");
+		logger.debug("Preparing Search with name "+name);
 		String tabconfiglist = NiesConfig.getProperty(String.format(NIES_TABLIST,name));
 		if (tabconfiglist == null)
 			throw new BadConfigurationError("Not configured to prepare tablist for "+name+"; please provide "+String.format(NIES_TABLIST,name));

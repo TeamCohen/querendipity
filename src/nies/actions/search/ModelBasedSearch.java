@@ -205,7 +205,7 @@ public class ModelBasedSearch extends Search {
 					//,"paper", vsHistory.toArray());
 			}
 			
-			Query q=usingHistory?
+			edu.cmu.pra.learn.Query q=usingHistory?
 					modelRead.parseQuery(qLine):
 					modelCite.parseQuery(qLine);
 					

@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ -z "$2" ]; then
     echo "Usage: $0 current desired
-$0 will copy *.properties to *.properties.current and *.properties.desired to *.properties."
+$0 will copy *.properties to *.properties.current. If *.properties.desired exists, $0 will copy *.properties.desired to *.properties."
     exit
 fi
 

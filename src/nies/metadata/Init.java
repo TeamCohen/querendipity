@@ -16,11 +16,12 @@ import javax.xml.bind.JAXBException;
 
 
 import ghirl.graph.*;
+import edu.cmu.lti.util.run.Param;
 import edu.cmu.pra.CTag;
+import edu.cmu.pra.LearnerPRA;
 import edu.cmu.pra.graph.IGraph;
 import edu.cmu.pra.model.ModelPathRank;
 import edu.cmu.pra.model.PRAModel;
-import edu.cmu.lti.util.run.Param;
 
 import org.apache.log4j.Logger;
 import nies.ui.Tab;
@@ -191,12 +192,12 @@ public class Init extends HttpServlet {
 				log.info("pra.conf="+fnConf);
 				log.info("pra.model="+fnModel);
 
-
 				Param.overwriteFrom(fd+fnConf);
 				Param.overwrite("dataFolder="+fd);
 
+				new LearnerPRA(); // PRA r430
 
-				
+
 				PRAModel netCite=new ModelPathRank();
 				log.info(netCite.schema.vRel.getVS(CTag.nameS));
 

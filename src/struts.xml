@@ -68,6 +68,9 @@
         <action name="TopicDescription" class="nies.actions.search.Display">
         	<result name="success" type="tiles">Results</result>
         </action>
+        <action name="TopicIndex" class="nies.actions.search.Display">
+        	<result name="success" type="tiles">Results</result>
+        </action>
         
         <action name="NodeAnalysis" class="nies.actions.NodeAnalysis">
         	<result name="success">/NodeAnalysis.jsp</result>
@@ -181,10 +184,9 @@
         <action name="" class="nies.actions.NiesSupport">
         	<result>/Splash.jsp</result>
         </action>
-        <!-- 
+        
         <action name="*" class="nies.actions.NiesSupport">
         	<result>/{1}.jsp</result>
         </action>
-        -->
     </package>
 </struts>

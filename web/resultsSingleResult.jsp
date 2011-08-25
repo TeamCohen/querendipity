@@ -88,37 +88,36 @@
 					<tr><td class="cliptext-heading"><s:property value="key"/></td>
 					    <td class="cliptext-value"><div dojoType="dijit.layout.StackContainer" dolayout="false" id="<s:property value="title"/>-<s:property value="id"/>-<s:property value="key"/>">
 							<div dojoType="dijit.layout.ContentPane" title="summary" >
-								<s:if test="prose"><s:if test="value.size() > 1"><ul></s:if><s:else><p style="margin-top:0"></s:else></s:if>
+								<s:if test="prose"><s:if test="value.size() > 1"><ul></s:if><s:else><p class="prose" style="margin-top:0"></s:else></s:if>
 								<s:subset  source="value" count="#N_ATTRSUMMARY"><s:iterator status="descParity">
 									<s:url var="newAttrSearch" action="Search" escapeAmp="%{false}">
 										<s:param name="keywords" value="href"/>
 										<s:param name="rf"       value="%{rf}"/>
 										<s:param name="depth"    value="%{depth}"/>
 									</s:url>
-									<s:if test="prose"><s:if test="value.size() > 1"><li></s:if><s:property value="anchorText"/> <a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>">Search this</a><s:if test="value.size() > 1"></li></s:if></s:if>
+									<s:if test="prose"><s:if test="value.size() > 1"><li class="prose"></s:if><s:property value="anchorText"/> <a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>">Search these keywords</a><s:if test="value.size() > 1"></li></s:if></s:if>
 									<s:else><a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>"><s:property value="anchorText"/></a>
 									<s:if test="!#descParity.last">, </s:if></s:else>
 								</s:iterator></s:subset><s:set name="nmoreattrs" value="value.size()-#N_ATTRSUMMARY"/>
-								<s:if test="prose"></ul></s:if>
+								<s:if test="prose"><s:if test="value.size() > 1"></ul></s:if><s:else></p></s:else></s:if>
 							<s:if test="value.size() <= #N_ATTRSUMMARY"></div>
 							</s:if><s:else>
 									<s:if test="prose"><div class="prose-moreless"></s:if><a onclick="dijit.byId('<s:property value="title"/>-<s:property value="id"/>-<s:property value="key"/>').forward()" class="subtle"><s:property value="#nmoreattrs"/> More...</a><s:if test="prose"></div></s:if>
 							</div>
 							<div dojoType="dijit.layout.ContentPane" title="full" style="overflow:hidden;display:none">
-								<s:if test="prose"><s:if test="value.size() > 1"><ul></s:if><s:else></p></s:else></s:if>
+								<s:if test="prose"><s:if test="value.size() > 1"><ul></s:if><s:else><p class="prose" style="margin-top:0"></s:else></s:if>
 								<s:subset source="value" count="maxnvalues_setting"><s:iterator status="descParity">
 									<s:url var="newAttrSearch" action="Search" escapeAmp="%{false}">
 										<s:param name="keywords" value="href"/>
 										<s:param name="rf" value="%{rf}"/>
 										<s:param name="depth" value="%{depth}"/>
 									</s:url>
-									<s:if test="prose"><li></s:if>
-									<a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>"><s:property value="anchorText"/></a>
-									<s:if test="prose"></li></s:if>
-									<s:elseif test="!#descParity.last">, </s:elseif>
+									<s:if test="prose"><s:if test="value.size() > 1"><li></s:if><s:property value="anchorText"/> <a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>">Search these keywords</a><s:if test="value.size() > 1"></li></s:if></s:if>
+									<s:else><a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>"><s:property value="anchorText"/></a>
+									<s:if test="!#descParity.last">, </s:if></s:else>
 								</s:iterator></s:subset>
 									<s:if test="value.size() > maxnvalues_setting">(truncating after <s:property value="maxnvalues_setting"/>)</s:if>
-									<s:if test="prose"></ul></s:if>
+									<s:if test="prose"><s:if test="value.size() > 1"></ul></s:if><s:else></p></s:else></s:if>
 									<s:if test="prose"><div class="prose-moreless"></s:if><a onclick="dijit.byId('<s:property value="title"/>-<s:property value="id"/>-<s:property value="key"/>').back()" class="subtle">Less...</a><s:if test="prose"></div></s:if>
 							</div>
 							</s:else>
@@ -141,7 +140,7 @@
 							<s:param name="keywords" value="href"/>
 							<s:param name="rf"       value="%{rf}"/>
 							<s:param name="depth"    value="%{depth}"/></s:url>
-						<li><a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>"><s:property value="text"/></a> <s:debug/></li>
+						<li><a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>"><s:property value="text"/></a></li>
 					</s:iterator></s:subset><!-- end attribute value summary -->
 					<s:set name="nmoreattrs" value="value.size()-#N_ATTRSUMMARY"/>
 					<s:if test="value.size() <= #N_ATTRSUMMARY"></ul></div>

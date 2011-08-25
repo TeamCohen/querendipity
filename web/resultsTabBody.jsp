@@ -5,7 +5,8 @@
 	<!-- Page: <s:property value="page"/> -->
 	<!-- Starti: <s:property value="starti"/> -->
 	<!-- Endi: <s:property value="endi"/> -->
-	<div><p class="niesleft">Results <s:property value="starti"/>-<s:property value="endi"/> of 
+	<div><p style="margin:0;padding:0">Tab score: <s:property value="getText('{0,number,0.0E0}',{topscore})"/></p>
+	     <p class="niesleft">Results <s:property value="starti"/>-<s:property value="endi"/> of 
 		<s:if test="nresults >= 0"><s:property value="nresults"/></s:if>
 		<s:elseif test="nshowing >= maxResults">about <s:property value="nresultsEstimate"/></s:elseif>
 		<s:else>at least <s:property value="nshowing"/>. <br/>We estimate <s:property value="nresultsEstimate"/> results total; increase the <a href="<s:url action="AdminSettings"/>">time limit</a> to allow them to render.</s:else></p>
@@ -37,7 +38,7 @@
 	Page 
 	<s:iterator value="#pagelist">
 	<s:if test="#pagelist.current-1 == page"><s:property/></s:if>
-	<s:else><a href="<s:url action="Search" includeParams="get"><s:param name="pagechange" value=""/><s:param name="pages" value="pages"/><s:param name="tab" value="title"/></s:url>&pagechange=<s:property value="#tabstatus.count"/>,<s:property value="#pagelist.current-1"/>"><s:property/></a></s:else>
+	<s:else><a href="<s:url includeParams="all"><s:param name="pagechange" value=""/><s:param name="pages" value="pages"/><s:param name="tab" value="title"/></s:url>&pagechange=<s:property value="#tabstatus.count"/>,<s:property value="#pagelist.current-1"/>"><s:property/></a></s:else>
 	<s:if test="#pagelist.current-1 < #upperBound"> | </s:if>
 	</s:iterator>
 	of <s:property value="npages"/>

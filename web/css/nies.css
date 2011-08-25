@@ -16,6 +16,7 @@ form {margin-bottom: 0; padding-bottom:0 }
 .niesresult .relevanceFeedback img {height:1em; width: 1em; float:right}
 .niesresult .title             {padding-left:5.5em; padding-right: 5em; xborder: 1pt green solid}
 .niesresult .score             {width:5em; float:right; text-align:right; xborder: 1pt orange solid}
+.niesresult .prose .attrLink {font-size:8pt}
 .niesresult .prose-moreless {margin-left:0.8em}
 .niesresult td {vertical-align:top; font-size: 10pt;}
 .niesresult .link {font-weight:normal; font-size:9pt; padding-left:0.5em; white-space:nowrap}

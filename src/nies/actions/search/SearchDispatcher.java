@@ -34,7 +34,7 @@ import nies.data.User;
 public class SearchDispatcher extends NiesSupport implements ModelDriven<SearchForm> {
 	private static final Logger logger = Logger.getLogger(SearchDispatcher.class);
 	/** Must match the selector IDs in searchform.jsp **/
-	public static final String ORDERBY_KEYWORD="Keyword", ORDERBY_READING="ReadingRex", ORDERBY_CITATION="CiteRex", ORDERBY_TOPIC="Topic";
+	public static final String ORDERBY_KEYWORD="Keyword", ORDERBY_READING="ReadingRex", ORDERBY_CITATION="CiteRex", ORDERBY_TOPIC="Topic", ORDERBY_TOPICLIST="TopicIndex";
 	private String orderBy="";
 	private SearchForm model=new SearchForm();
 	private Map<String,String> searchRoutes = new TreeMap<String,String>();
@@ -44,7 +44,8 @@ public class SearchDispatcher extends NiesSupport implements ModelDriven<SearchF
 		searchRoutes.put(ORDERBY_KEYWORD,"Search");
 		searchRoutes.put(ORDERBY_READING,"ModelBasedSearch");
 		searchRoutes.put(ORDERBY_CITATION, "ModelBasedSearch");
-		searchRoutes.put(ORDERBY_TOPIC, "Display");
+		searchRoutes.put(ORDERBY_TOPIC, "TopicDescription");
+		searchRoutes.put(ORDERBY_TOPICLIST, "TopicIndex");
 	}
 	
 	public void prepare() {}

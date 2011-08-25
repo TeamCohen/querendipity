@@ -9,4 +9,4 @@
 <link rel="stylesheet" type="text/css" href="css/nies.css"/>
 <link rel="stylesheet" type="text/css" href="ajaxtags/css/ajaxtags.css" />
 <link rel="stylesheet" type="text/css" href="ajaxtags/css/displaytag.css" />
-<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dijit/themes/nihilo/nihilo.css">
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.6.1/dijit/themes/nihilo/nihilo.css">
