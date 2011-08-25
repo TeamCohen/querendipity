@@ -16,14 +16,16 @@ public class TextWalk {
 	public static void main(String args[]) throws Exception {
 		if (args.length < 4) {
 			System.out.println("Usage:\n" +
-					"\t"+TextWalk.class.getCanonicalName()+" -depth d -limit N -query word1 word2 word3 ...");
+					"\t"+TextWalk.class.getCanonicalName()+" -auto -depth d -limit N -query word1 word2 word3 ...");
 			return;
 		}
 		int depth=1;
 		int limit=-1;
 		StringBuilder kw = new StringBuilder();
+		boolean shell=true;
 		for (int i=0; i<args.length; i++) {
-			if (args[i].equals("-depth")) depth = Integer.parseInt(args[++i]);
+			if (args[i].equals("-auto")) shell = false;
+			else if (args[i].equals("-depth")) depth = Integer.parseInt(args[++i]);
 			else if (args[i].equals("-limit")) limit = Integer.parseInt(args[++i]);
 			else if (args[i].equals("-query")) kw.append(args[++i]);
 			else kw.append(" ").append(args[i]);
@@ -34,12 +36,14 @@ public class TextWalk {
 		s.setGraph(g);
 		s.setKeywords(kw.toString());
 		s.setDepth(depth);
-		System.err.println("Confirm query:\n" +
+		if (shell) {
+		    System.err.println("Confirm query:\n" +
 				"\t"+s.getKeywords()+" [depth="+depth+" steps="+s.getNUMSTEPS()+"]\n" +
 				"(hit enter)");
-		new Scanner(System.in).nextLine();
+		    new Scanner(System.in).nextLine();
+		}
 		try {
-		s.execute();
+		    s.execute();
 		} catch (Exception e) {
 			if (s.getGraphResults() == null) throw (e);
 		}
