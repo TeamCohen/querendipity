@@ -36,7 +36,7 @@
 				<div class="score"><s:property value="score"/></div>
 				<div class="title">
 					<s:property value="label"/>
-					<a class="link" href="<s:property value="#newSearch" escape="%{false}"/>" onmousedown="return clk('<s:property value="#rfOnsite" escape="%{false}"/>&type=click');">Search this</a>
+					<a class="link" href="<s:property value="#newSearch" escape="%{false}"/>" onmousedown="return clk('<s:property value="#rfOnsite" escape="%{false}"/>&type=click');">Search nearby</a>
 					<s:iterator value="titleLinks"><a class="link" target="_blank" href="<s:property value="href" escape="%{false}"/>" onmousedown="return clk('<s:property value="#rfurl" escape="%{false}"/>&type=click');"><s:property value="anchorText"/><img src="images/new-window.png"/></a></s:iterator>
 					<s:if test="#hasOffsite"><a class="link" href="<s:property value="href" escape="%{false}"/>" onmousedown="return clk('<s:property value="#rfOffsite" escape="%{false}"/>&type=click');">View offsite<img src="images/new-window.png"/></a></s:if>
 				</div>
