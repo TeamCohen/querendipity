@@ -19,10 +19,12 @@ function makeSelections() {
 	if (typeof(elt) !== 'undefined') {
 		<s:if test="topic.length() > 0">// using topic
 		elt.set('value','<s:property value="topic"/>');
+		console.log("onLoad setting <s:property value="orderBy"/>_file to <s:property value="topic"/>");
 		</s:if><s:elseif test="file.length() > 0">// using file
 		elt.set('value','<s:property value="file"/>');
+		console.log("onLoad setting <s:property value="orderBy"/>_file to <s:property value="file"/>");
 		</s:elseif>
-	}
+	} else console.log("onLoad: dijit elt <s:property value="orderBy"/>_file not defined.");
 }
 
 dojo.addOnLoad(makeSelections);
@@ -54,14 +56,11 @@ td.clear {border:none}
 			<div dojoType="dojox.form.DropDownStack" stackId="orderbydetails" stackPrefix="orderBy" 
 				    id="orderBy" name="orderBy" class="searchform-control" value="">
 				    <script type="dojo/connect" event="onChange">
-				    	//console.debug("setting orderby");
 				    	filefield = dojo.query('[name$='+this.getValue()+'_file]')[0];
 				    	if (filefield != null) {
-				    		//console.debug("filefield "+this.getValue()+"_file exists");
+							console.debug("orderBy selection setting file");
 				    		dojo.byId("file").setValue(filefield.getValue());
-				    	} else {
-				    		//console.debug("filefield "+this.getValue()+"_file does not exist");
-				    	}
+				    	} else console.debug("orderBy selection setting file: no file field for orderBy "+this.getValue());
 				    </script>
 		    </div>
 		<!-- </td>
@@ -81,7 +80,7 @@ td.clear {border:none}
 						(depth
 							<span class="fieldvalue" dojoType="dijit.InlineEditBox" editor="dijit.form.TextBox" width="<s:property value="%{depth.toString().length()*0.7}"/>em" title="depth">
 								<script type="dojo/connect" event="onChange">
-									//console.debug("setting depth");
+									console.debug("orderByKeyword setting depth");
 									dojo.byId("depth").setValue(this.getValue());
 								</script>
 								<s:property value="depth"/>
@@ -89,6 +88,7 @@ td.clear {border:none}
 						 density 
 						 	<span class="fieldvalue" dojoType="dijit.InlineEditBox" editor="dijit.form.TextBox" width="<s:property value="%{density.toString().length()*0.7}"/>em" title="density">
 						 		<script type="dojo/connect" event="onChange">
+									console.debug("orderByKeyword setting density");
 						 			dojo.byId("density").setValue(this.getValue());
 						 		</script>
 						 		<s:property value="density"/>
@@ -98,13 +98,15 @@ td.clear {border:none}
 				
 				<div dojoType="dijit.layout.ContentPane" title="<s:property value="niesConfig['nies.searcher.TopicIndex']"/>" id="orderByTopicIndex" class="searchform-sub">
 					<input type="hidden" id="maxResults" name="maxResults" value="20"/>
-					<input type="hidden" id="TopicIndex_file" name="TopicIndex_file" 
+					<input type="hidden" id="_TopicIndex_file" name="TopicIndex_file" 
 						value="<s:property value="niesConfig['nies.searcher.TopicIndex.walkfile']"/>"/>
 					<div class="searchform-caption">
-						(default: <span class="fieldvalue" dojoType="dijit.InlineEditBox" editor="dijit.form.TextBox" width="<s:property value="niesConfig['nies.searcher.TopicIndex.walkfile'].length()*0.7"/>em" title="file">
+						(default: <span id="TopicIndex_file" class="fieldvalue" 
+										dojoType="dijit.InlineEditBox" editor="dijit.form.TextBox" 
+										width="<s:property value="niesConfig['nies.searcher.TopicIndex.walkfile'].length()*0.7"/>em">
 							<script type="dojo/connect" event="onChange">
-								//console.debug("Setting...");
-								dojo.byId("TopicIndex_file").setValue(this.getValue());
+								console.debug("TopicIndex setting file");
+								dojo.byId("_TopicIndex_file").setValue(this.getValue());
 								dojo.byId("file").setValue(this.getValue());
 							</script>
 							<s:property value="niesConfig['nies.searcher.TopicIndex.walkfile']"/>
@@ -118,11 +120,11 @@ td.clear {border:none}
 						jsId="topicList"></div>
 					<div dojoType="dijit.form.Select" id="Topic_file" name="Topic_file" class="searchform-control" store="topicList" sortByLabel="false"/>
 						<script type="dojo/connect" event="onChange">
-							//console.debug("Setting topic file");
-							var field = dojo.query('[name$=Topic_file]')[0];
-							//console.debug("Setting topic file from field:");
-							//console.dir(field);
-							dojo.byId("file").setValue(field.getValue());
+							if (dijit.byId("orderBy").getValue() === "Topic") {
+								console.debug("TopicDescription setting file");
+								var field = dojo.query('[name$=Topic_file]')[0];
+								dojo.byId("file").setValue(field.getValue());
+							} else console.log("Squashing spurious TopicDescription onChange() message");
 						</script>
 					</div>
 					<span class="searchform-caption"></span>
@@ -181,7 +183,7 @@ td.clear {border:none}
 	
 	<tr>
 		<td colspan="2" class="clear" align="right">
-			<input type="hidden" id="file" name="file" value=""></input>
+			<input type="hidden" id="file" name="file" value="<s:property value="file"/>"></input>
 			<s:submit/>
 		</td>
 	</tr>
