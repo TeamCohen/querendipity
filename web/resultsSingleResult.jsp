@@ -112,7 +112,7 @@
 										<s:param name="rf" value="%{rf}"/>
 										<s:param name="depth" value="%{depth}"/>
 									</s:url>
-									<s:if test="prose"><s:if test="value.size() > 1"><li></s:if><s:property value="anchorText"/> <a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>">Search these keywords</a><s:if test="value.size() > 1"></li></s:if></s:if>
+									<s:if test="prose"><s:if test="value.size() > 1"><li class="prose"></s:if><s:property value="anchorText"/> <a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>">Search these keywords</a><s:if test="value.size() > 1"></li></s:if></s:if>
 									<s:else><a class="attrLink" href="<s:property value="#newAttrSearch" escape="%{false}"/>"><s:property value="anchorText"/></a>
 									<s:if test="!#descParity.last">, </s:if></s:else>
 								</s:iterator></s:subset>
