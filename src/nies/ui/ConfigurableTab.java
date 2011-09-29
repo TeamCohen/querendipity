@@ -13,6 +13,7 @@ import ghirl.graph.Graph;
 import ghirl.graph.GraphId;
 import ghirl.graph.NodeFilter;
 import ghirl.graph.PathSearcher;
+import ghirl.graph.WeightedPathSearcher;
 import ghirl.graph.TextNodeFilter;
 import ghirl.util.Distribution;
 import ghirl.util.TreeDistribution;
@@ -68,11 +69,11 @@ public class ConfigurableTab extends Tab {
 	private static final String LINK_TITLE_PROP = "nies.link.%s.title";
 	NodeFilter filter;
 	PathSearcher labelSearcher=null;
-	List<Entry<String,PathSearcher>> attrSearchers=new ArrayList<Entry<String,PathSearcher>>();
+	List<Entry<String,WeightedPathSearcher>> attrSearchers=new ArrayList<Entry<String,WeightedPathSearcher>>();
 	List<Entry<String,String>> linkFormatters= new ArrayList<Entry<String,String>>();
 	boolean dereferenceById=false;
 	String noLabel=null;
-	public List<Entry<String,PathSearcher>> getAttrSearchers() {
+	public List<Entry<String,WeightedPathSearcher>> getAttrSearchers() {
 		return attrSearchers;
 	}
 	int maxnvalues_setting;
@@ -111,7 +112,7 @@ public class ConfigurableTab extends Tab {
 		if (this.labelSearcher != null) this.labelSearcher.setGraph(graph);
 		dereferenceSearcher.setGraph(graph);
 		foridSearcher.setGraph(graph);
-		for (Entry<String,PathSearcher> e : attrSearchers) {
+		for (Entry<String,WeightedPathSearcher> e : attrSearchers) {
 			if (e.value != null) e.value.setGraph(graph);
 		}
 		logger.info("Graph set; results may be processed now.");
@@ -171,13 +172,13 @@ public class ConfigurableTab extends Tab {
 					logger.error("Bad config in nies for tab "+this.title+": "+attrName+" has null path");
 					continue;
 				}
-				PathSearcher ps = null;
+				WeightedPathSearcher ps = null;
 				if (!"".equals(path)) {
 					if (logger.isDebugEnabled()) logger.debug("Creating attribute "+attrName+" with search path "+path);
-					ps = new PathSearcher(path);
+					ps = new WeightedPathSearcher(path);
 					if (graph != null) ps.setGraph(graph);
 				} else logger.debug("Using null pathsearcher for "+attrName);
-				attrSearchers.add(new Entry<String,PathSearcher>(attrName, ps));
+				attrSearchers.add(new Entry<String,WeightedPathSearcher>(attrName, ps));
 			}
 		}
 		
@@ -247,9 +248,9 @@ public class ConfigurableTab extends Tab {
 		long attrStart = System.currentTimeMillis();
 		if (logger.isDebugEnabled()) logger.debug("****** Process Result prologue: "+((double)attrStart - (double)prStart)/1000);
 		long attrValues = 0;
-		for(Entry<String,PathSearcher> attr : attrSearchers) {
+		for(Entry<String,WeightedPathSearcher> attr : attrSearchers) {
 			long searchStart = System.currentTimeMillis();
-			PathSearcher searcher = attr.getValue();
+			WeightedPathSearcher searcher = attr.getValue();
 			Distribution valuedist = null;
 			if (searcher != null) valuedist=searcher.search(startFrom);
 			else {logger.debug("Using root node for attribute "+attr.getKey()); valuedist = startFrom; }
