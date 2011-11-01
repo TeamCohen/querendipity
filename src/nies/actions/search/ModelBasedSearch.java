@@ -58,6 +58,12 @@ public class ModelBasedSearch extends Search {
 	}
 	
 	String standingUser;
+	public void setCRstandingAuthor(String standingUser) {
+		this.standingUser = standingUser;
+	}
+	public String getCRstandingAuthor() {
+		return standingUser;
+	}
 	public void setStandingUser(String standingUser) {
 		this.standingUser = standingUser;
 	}
@@ -164,7 +170,7 @@ public class ModelBasedSearch extends Search {
 		super.buildQuery();
 	}
 	protected WeightedTextGraph doQuery(String query) {
-
+		logger.debug("standingUser: "+standingUser);
 		if (igraph==null) {
 			this.addActionError("The current graph doesn't support Model-Based Search. Talk to Katie or Ni about that.");
 			return null;

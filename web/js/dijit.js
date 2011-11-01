@@ -1,0 +1,1 @@
+define(["dijit/./lib/main"], function(main){return main;});

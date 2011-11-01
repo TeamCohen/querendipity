@@ -1,4 +1,5 @@
-<%@ taglib prefix="s" uri="/struts-tags" %><%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" prefix="ajax"%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ taglib uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" prefix="ajax"%>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 
 <html>

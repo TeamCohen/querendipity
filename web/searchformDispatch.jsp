@@ -1,5 +1,5 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
-<script>
+<script language="javascript">
 dojo.require("dijit.form.Select");
 dojo.require("dijit.InlineEditBox");
 dojo.require("dijit.form.TextBox");
@@ -19,12 +19,12 @@ function makeSelections() {
 	if (typeof(elt) !== 'undefined') {
 		<s:if test="topic.length() > 0">// using topic
 		elt.set('value','<s:property value="topic"/>');
-		console.log("onLoad setting <s:property value="orderBy"/>_file to <s:property value="topic"/>");
+		//console.log("onLoad setting <s:property value="orderBy"/>_file to <s:property value="topic"/>");
 		</s:if><s:elseif test="file.length() > 0">// using file
 		elt.set('value','<s:property value="file"/>');
-		console.log("onLoad setting <s:property value="orderBy"/>_file to <s:property value="file"/>");
+		//console.log("onLoad setting <s:property value="orderBy"/>_file to <s:property value="file"/>");
 		</s:elseif>
-	} else console.log("onLoad: dijit elt <s:property value="orderBy"/>_file not defined.");
+	} //else console.log("onLoad: dijit elt <s:property value="orderBy"/>_file not defined.");
 }
 
 dojo.addOnLoad(makeSelections);
@@ -60,14 +60,9 @@ td.clear {border:none}
 				    	if (filefield != null) {
 							console.debug("orderBy selection setting file");
 				    		dojo.byId("file").setValue(filefield.getValue());
-				    	} else console.debug("orderBy selection setting file: no file field for orderBy "+this.getValue());
+				    	} //else console.debug("orderBy selection setting file: no file field for orderBy "+this.getValue());
 				    </script>
 		    </div>
-		<!-- </td>
-	</tr>
-	<tr id="subform">
-		<td class="searchform-labels">&nbsp;</td>
-		<td> -->
 			<div dojoType="dijit.layout.StackContainer" id="orderbydetails" doLayout="false" style="display:none">
 		
 				<div dojoType="dijit.layout.ContentPane" title="<s:property value="niesConfig['nies.searcher.Search']"/>" id="orderByKeyword" class="searchform-sub">
@@ -96,6 +91,7 @@ td.clear {border:none}
 					</div>
 				</div>
 				
+				<s:if test="niesConfig['nies.searcher.TopicIndex.walkfile'].length() > 0">
 				<div dojoType="dijit.layout.ContentPane" title="<s:property value="niesConfig['nies.searcher.TopicIndex']"/>" id="orderByTopicIndex" class="searchform-sub">
 					<input type="hidden" id="maxResults" name="maxResults" value="20"/>
 					<input type="hidden" id="_TopicIndex_file" name="TopicIndex_file" 
@@ -113,7 +109,9 @@ td.clear {border:none}
 							</span>)
 					</div>
 				</div>
+				</s:if>
 				
+				<s:if test="niesConfig['nies.searcher.TopicDescription.ajaxStringsFile'].length() > 0">
 				<div dojoType="dijit.layout.ContentPane" title="<s:property value="niesConfig['nies.searcher.TopicDescription']"/>" id="orderByTopic" class="searchform-sub">
 					<!-- <div class="help"><span class="searchform-caption"><a href="#">What is this?</a></span></div> -->
 					<div dojoType="dojo.data.ItemFileReadStore" url="ajaxstrings.view?file=<s:property value="niesConfig['nies.searcher.TopicDescription.ajaxStringsFile']"/>&type=json&label=field1&identifier=field0"
@@ -129,6 +127,7 @@ td.clear {border:none}
 					</div>
 					<span class="searchform-caption"></span>
 				</div>
+				</s:if>
 				
 				<s:if test="ghirlConfig['pra.model'].length() > 0">
 				<div dojoType="dijit.layout.ContentPane" title="Reading recommendations" id="orderByReadingRex" class="searchform-sub">
@@ -164,7 +163,6 @@ td.clear {border:none}
 					</div>
 				</div>
 				</s:if><s:else><!-- pra.model = "<s:property value="ghirlConfig['pra.model']"/>" --></s:else>
-				
 			</div><!-- end stack -->
 		</td>
 	</tr>

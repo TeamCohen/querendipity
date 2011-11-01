@@ -1,0 +1,1 @@
+define(["dojo/./lib/main-browser"], function(main){return main;});

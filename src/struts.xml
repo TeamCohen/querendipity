@@ -131,6 +131,21 @@
         	<result name="list" type="redirectAction">UserList</result>
         	<result>/ViewUser.jsp</result>
         </action>
+        
+        
+        <action name="UploadData" class="nies.actions.UploadData" method="upload">
+        	<result name="input">/UploadFile.jsp</result>
+        	<result>/UploadFile.jsp</result>
+        </action>
+        <action name="UploadedFileList" class="nies.actions.UploadedFileList">
+        	<result>/UploadedFileList.jsp</result>
+        </action>
+        <action name="UploadedFileList_Admin" class="nies.actions.UploadedFileList" method="all">
+        	<result>/UploadedFileList.jsp</result>
+        </action>
+        <action name="UploadedFileView" class="nies.actions.DisplayCsvData">
+        	<result>/UploadedFileView.jsp</result>
+        </action>
     </package>
     
     

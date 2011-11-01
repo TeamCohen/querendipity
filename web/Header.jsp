@@ -57,7 +57,9 @@ var gotoSelectedUrl = function(selector) {
 				<option value="">My Info...</option>
 				<option value="<s:url action="Profile_view"/>"<s:if test="niesConfig['nies.readinghistory'] == null"> disabled="disabled"</s:if>>Profile</option>
 				<option value="<s:url action="PositiveResults"/>"<s:if test="niesConfig['nies.positivedocuments.tab'] == null"> disabled="disabled"</s:if>>Starred Documents</option>
-			</select> 
+				<option value="<s:url action="UploadedFileList"/>"<s:if test="niesConfig['nies.uploads'] == null"> disabled="disabled"</s:if>>List Files</option>
+				<option value="<s:url action="UploadData"/>"<s:if test="niesConfig['nies.uploads'] == null"> disabled="disabled"</s:if>>Upload File</option>
+			</select>
 			| <a href="<s:url action="Logout"/>">Log Out</a>
 		</s:if><!-- end second logged-in section -->
 		<s:else><!-- if we're not logged in: -->
