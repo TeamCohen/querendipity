@@ -4,8 +4,8 @@ This file last changed:
 Dec 2009 by Katie Rivard - krivard@andrew.cmu.edu
 
 There are two default/test accounts:
- Harry Q. Bovik/insecure
- Administrator/invisible ribosome
+ Harry Q. Bovik/********
+ Administrator/******************
 
 Troubleshooting:
 	If you:
